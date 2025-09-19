@@ -8,8 +8,8 @@ export class ShapeTable extends HTMLElement {
 
     #sc = new Subscription({
         host: this,
+        callback: this.#mc.queue,
         connected: true,
-        callbacks: [this.#mc.queue],
         subscribe,
         unsubscribe
     });

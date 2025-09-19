@@ -3,8 +3,8 @@ class Bind {
         let { host, callbacks } = params;
         for (let callback of callbacks) {
             // do not bind and replace already bound functions
-            if (!callback.hasOwnProperty("prototype") &&
-                callback instanceof Function) {
+            if (callback instanceof Function &&
+                !callback.hasOwnProperty("prototype")) {
                 let { name } = callback;
                 if (!name.startsWith("#"))
                     host[name] = callback.bind(host);
@@ -20,7 +20,7 @@ class Events {
     constructor(params) {
         const { host, target, callbacks, connected } = params;
         this.#target = target ?? host;
-        this.#callbacks = getBoundCallbacks$2(host, callbacks);
+        this.#callbacks = getBoundCallbacks(host, callbacks);
         if (connected)
             this.connect();
     }
@@ -41,121 +41,90 @@ class Events {
         }
     }
 }
-function getBoundCallbacks$2(host, callbacks) {
-    let events = [];
+function getBoundCallbacks(host, callbacks) {
+    let boundCallbacks = [];
     for (let [name, callback] of callbacks) {
-        if (!callback.hasOwnProperty("prototype") && callback instanceof Function) {
+        if (callback instanceof Function && !callback.hasOwnProperty("prototype")) {
             callback = callback.bind(host);
         }
-        events.push([name, callback]);
+        boundCallbacks.push([name, callback]);
     }
-    return events;
+    return boundCallbacks;
 }
 
 class Microtask {
     #queued = false;
-    #callbacks;
+    #callback;
     constructor(params) {
+        let { host, callback } = params;
         this.queue = this.queue.bind(this);
-        this.#callbacks = getBoundCallbacks$1(params);
+        this.#callback = callback;
+        if (callback instanceof Function && !callback.hasOwnProperty("prototype")) {
+            this.#callback = callback.bind(host);
+        }
     }
     queue() {
         if (this.#queued)
             return;
         this.#queued = true;
+        // could this be a bound function? less function creation
         queueMicrotask(() => {
             this.#queued = false;
-            for (let callback of this.#callbacks) {
-                callback();
-            }
+            this.#callback();
         });
     }
 }
-function getBoundCallbacks$1(params) {
-    let { host, callbacks } = params;
-    let boundCallbacks = [];
-    for (let callback of callbacks) {
-        if (!callback.hasOwnProperty("prototype") && callback instanceof Function) {
-            callback = callback.bind(host);
-        }
-        boundCallbacks.push(callback);
-    }
-    return boundCallbacks;
-}
 
 class Subscription {
-    #callbacks;
-    #affects;
+    #callback;
+    #affect;
     #subscribe;
     #unsubscribe;
     constructor(params) {
-        let { host, callbacks, connected, subscribe, unsubscribe } = params;
+        let { host, callback, connected, subscribe, unsubscribe } = params;
         this.#subscribe = subscribe;
         this.#unsubscribe = unsubscribe;
-        this.#callbacks = getBoundCallbacks(host, callbacks);
+        this.#callback = callback;
+        if (callback instanceof Function && !callback.hasOwnProperty("prototype")) {
+            this.#callback = callback.bind(host);
+        }
         if (connected)
             this.connect();
     }
     connect() {
-        if (this.#affects)
-            return;
-        this.#affects = [];
-        for (let callback of this.#callbacks) {
-            this.#affects.push(this.#subscribe(callback));
-        }
+        if (!this.#affect)
+            this.#affect = this.#subscribe(this.#callback);
     }
     disconnect() {
-        if (this.#affects)
-            for (let callback of this.#affects) {
-                this.#unsubscribe(callback);
-            }
+        if (this.#affect)
+            this.#unsubscribe(this.#affect);
     }
-}
-function getBoundCallbacks(host, callbacks) {
-    let bounded = [];
-    for (let callback of callbacks) {
-        if (!callback.hasOwnProperty("prototype") && callback instanceof Function) {
-            callback = callback.bind(host);
-        }
-        bounded.push(callback);
-    }
-    return bounded;
 }
 
 class QuerySelector {
+    #queries = new Map();
     #params;
-    #queries;
     constructor(params) {
         this.#params = params;
-        this.#queries = getQueries(params);
     }
-    query() {
-        this.#queries = getQueries(this.#params);
+    querySelector(selector) {
+        return getQuery(this.#params, this.#queries, selector)[0];
     }
-    get(name) {
-        return this.#queries.get(name)?.[0];
+    querySelectorAll(selector) {
+        return getQuery(this.#params, this.#queries, selector);
     }
-    getAll(name) {
-        return this.#queries.get(name);
+    deleteAll() {
+        this.#queries = new Map();
     }
 }
-function getQueries(params) {
-    const { target, querySelector, querySelectorAll } = params;
-    const queries = new Map();
-    if (querySelectorAll)
-        for (let selector of querySelectorAll) {
-            const queried = target.querySelectorAll(selector);
-            queries.set(selector, Array.from(queried));
-        }
-    if (querySelector)
-        for (let selector of querySelector) {
-            if (queries.has(selector))
-                continue;
-            const queried = target.querySelector(selector);
-            if (queried)
-                queries.set(selector, [queried]);
-        }
-    return queries;
+function getQuery(params, queries, selector) {
+    const { parent } = params;
+    let results = queries.get(selector);
+    if (!results) {
+        results = Array.from(parent.querySelectorAll(selector));
+        queries.set(selector, results);
+    }
+    return results;
 }
 
 const shadowRootInitFallback = {

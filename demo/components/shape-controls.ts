@@ -17,7 +17,7 @@ export class ShapeControls extends HTMLElement {
 
     #sc = new Subscription({
         host: this,
-        callbacks: [this.#mc.queue],
+        callback: this.#mc.queue,
         connected: true,
         subscribe,
         unsubscribe

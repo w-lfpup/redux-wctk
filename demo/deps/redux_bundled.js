@@ -514,11 +514,16 @@ function freeze(obj, deep = false) {
   if (isFrozen(obj) || isDraft(obj) || !isDraftable(obj))
     return obj;
   if (getArchtype(obj) > 1) {
-    obj.set = obj.add = obj.clear = obj.delete = dontMutateFrozenCollections;
+    Object.defineProperties(obj, {
+      set: { value: dontMutateFrozenCollections },
+      add: { value: dontMutateFrozenCollections },
+      clear: { value: dontMutateFrozenCollections },
+      delete: { value: dontMutateFrozenCollections }
+    });
   }
   Object.freeze(obj);
   if (deep)
-    Object.entries(obj).forEach(([key, value]) => freeze(value, true));
+    Object.values(obj).forEach((value) => freeze(value, true));
   return obj;
 }
 function dontMutateFrozenCollections() {
@@ -679,7 +684,7 @@ function finalizeProperty(rootScope, parentState, targetObject, prop, childValue
       return;
     }
     finalize(rootScope, childValue);
-    if ((!parentState || !parentState.scope_.parent_) && typeof prop !== "symbol" && Object.prototype.propertyIsEnumerable.call(targetObject, prop))
+    if ((!parentState || !parentState.scope_.parent_) && typeof prop !== "symbol" && (isMap(targetObject) ? targetObject.has(prop) : Object.prototype.propertyIsEnumerable.call(targetObject, prop)))
       maybeFreeze(rootScope, childValue);
   }
 }
@@ -1055,14 +1060,6 @@ function currentImpl(value) {
 // src/immer.ts
 var immer = new Immer2();
 var produce = immer.produce;
-immer.produceWithPatches.bind(
-  immer
-);
-immer.setAutoFreeze.bind(immer);
-immer.setUseStrictShallowCopy.bind(immer);
-immer.applyPatches.bind(immer);
-immer.createDraft.bind(immer);
-immer.finishDraft.bind(immer);
 
 // src/index.ts
 function createThunkMiddleware(extraArgument) {
@@ -1642,6 +1639,21 @@ function executeReducerBuilderCallback(builderCallback) {
         throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(29) : `\`builder.addCase\` cannot be called with two reducers for the same action type '${type}'`);
       }
       actionsMap[type] = reducer;
+      return builder;
+    },
+    addAsyncThunk(asyncThunk, reducers) {
+      if (process.env.NODE_ENV !== "production") {
+        if (defaultCaseReducer) {
+          throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(43) : "`builder.addAsyncThunk` should only be called before calling `builder.addDefaultCase`");
+        }
+      }
+      if (reducers.pending) actionsMap[asyncThunk.pending.type] = reducers.pending;
+      if (reducers.rejected) actionsMap[asyncThunk.rejected.type] = reducers.rejected;
+      if (reducers.fulfilled) actionsMap[asyncThunk.fulfilled.type] = reducers.fulfilled;
+      if (reducers.settled) actionMatchers.push({
+        matcher: asyncThunk.settled,
+        reducer: reducers.settled
+      });
       return builder;
     },
     addMatcher(matcher, reducer) {
