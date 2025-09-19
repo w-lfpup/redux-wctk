@@ -8,18 +8,18 @@
   modifications to work with web components or the WCTK.
 */
 
-import type { Unsubscribe } from "@reduxjs/toolkit";
+import type { Store, Unsubscribe } from "@reduxjs/toolkit";
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 
-// EASY TO MISS! Load initial state!
+// !!! EASY TO MISS !!! Load initial state!
 import initialState from "./state.json" with { type: "json"};
 
-// Type is not exported from redux toolkit
-export type ListenerCallback = () => void;
+// ListenerCallback is not exported from redux toolkit
+export type ListenerCallback = Parameters<Store["subscribe"]>[0];
 
-type Shape = 'square' | 'circle';
+export type Shape = 'square' | 'circle';
 
-interface ShapeState {
+export interface ShapeState {
 	circles: number;
 	squares: number;
 	shapeList: Shape[];
@@ -65,12 +65,9 @@ const datastore = configureStore({
 });
 
 // This is a minimal redux API for web components
-const { subscribe, getState, dispatch } = datastore;
+export const { subscribe, getState, dispatch } = datastore;
 
 // Required for WCTK to remove subscriptions with the result of `subscribe()`
-function unsubscribe(cb?: Unsubscribe): void {
+export function unsubscribe(cb?: Unsubscribe): void {
 	if (cb) cb();
 }
-
-export type { ShapeState, Shape };
-export { datastore, subscribe, getState, dispatch, unsubscribe };
