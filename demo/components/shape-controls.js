@@ -2,45 +2,36 @@ import { Wc, Events, Microtask, Subscription, QuerySelector } from "wctk";
 import { dispatch, getState, subscribe, unsubscribe } from "../datastore.js";
 export class ShapeControls extends HTMLElement {
     #wc = new Wc({ host: this });
-    #mc = new Microtask({ host: this, callbacks: [this.#render] });
+    #qc = new QuerySelector({ parent: this.#wc.shadowRoot });
+    #mc = new Microtask({ host: this, callback: this.#render });
     #ec = new Events({
         host: this,
         connected: true,
         target: this.#wc.shadowRoot,
-        callbacks: [
-            ["click", this.#clickHandler]
-        ]
+        callbacks: [["click", this.#clickHandler]],
     });
     #sc = new Subscription({
         host: this,
-        callbacks: [this.#mc.queue],
+        callback: this.#mc.queue,
         connected: true,
         subscribe,
-        unsubscribe
-    });
-    #qc = new QuerySelector({
-        target: this.#wc.shadowRoot,
-        querySelector: [
-            "[action='shapes/decrement_circles']",
-            "[action='shapes/decrement_squares']",
-            "[type=reset]"
-        ]
+        unsubscribe,
     });
     #render() {
         let state = getState();
         let { circles, squares } = state;
-        let circleButton = this.#qc.get("[action='shapes/decrement_circles']");
+        let circleButton = this.#qc.querySelector("[action='shapes/decrement_circles']");
         circles
-            ? circleButton?.removeAttribute('disabled')
-            : circleButton?.setAttribute('disabled', "");
-        let squaresButton = this.#qc.get("[action='shapes/decrement_squares']");
+            ? circleButton?.removeAttribute("disabled")
+            : circleButton?.setAttribute("disabled", "");
+        let squaresButton = this.#qc.querySelector("[action='shapes/decrement_squares']");
         squares
-            ? squaresButton?.removeAttribute('disabled')
-            : squaresButton?.setAttribute('disabled', "");
-        let resetButton = this.#qc.get("[type=reset]");
-        (circles + squares)
-            ? resetButton?.removeAttribute('disabled')
-            : resetButton?.setAttribute('disabled', "");
+            ? squaresButton?.removeAttribute("disabled")
+            : squaresButton?.setAttribute("disabled", "");
+        let resetButton = this.#qc.querySelector("[type=reset]");
+        circles + squares
+            ? resetButton?.removeAttribute("disabled")
+            : resetButton?.setAttribute("disabled", "");
     }
     #clickHandler(e) {
         let { target } = e;

@@ -2,13 +2,13 @@ import { Wc, Microtask, Subscription } from "wctk";
 import { getState, subscribe, unsubscribe } from "../datastore.js";
 export class ShapeList extends HTMLElement {
     #wc = new Wc({ host: this });
-    #mc = new Microtask({ host: this, callbacks: [this.#render] });
+    #mc = new Microtask({ host: this, callback: this.#render });
     #sc = new Subscription({
         host: this,
-        callbacks: [this.#mc.queue],
+        callback: this.#mc.queue,
         connected: true,
         subscribe,
-        unsubscribe
+        unsubscribe,
     });
     #render() {
         let state = getState();
