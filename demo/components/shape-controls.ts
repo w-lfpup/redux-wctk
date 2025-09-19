@@ -4,7 +4,7 @@ import { dispatch, getState, subscribe, unsubscribe } from "../datastore.js";
 export class ShapeControls extends HTMLElement {
     #wc = new Wc({ host: this });
 
-    #mc = new Microtask({ host: this, callbacks: [this.#render] });
+    #mc = new Microtask({ host: this, callback: this.#render });
 
     #ec = new Events({
         host: this,
@@ -23,31 +23,24 @@ export class ShapeControls extends HTMLElement {
         unsubscribe
     });
 
-    #qc = new QuerySelector({
-        target: this.#wc.shadowRoot,
-        querySelector: [
-            "[action='shapes/decrement_circles']",
-            "[action='shapes/decrement_squares']",
-            "[type=reset]"
-        ]
-    });
+    #qc = new QuerySelector({ parent: this.#wc.shadowRoot });
 
     #render() {
         let state = getState();
 
         let { circles, squares } = state;
 
-        let circleButton = this.#qc.get("[action='shapes/decrement_circles']");
+        let circleButton = this.#qc.querySelector("[action='shapes/decrement_circles']");
         circles
             ? circleButton?.removeAttribute('disabled')
             : circleButton?.setAttribute('disabled', "");
 
-        let squaresButton = this.#qc.get("[action='shapes/decrement_squares']");
+        let squaresButton = this.#qc.querySelector("[action='shapes/decrement_squares']");
         squares
             ? squaresButton?.removeAttribute('disabled')
             : squaresButton?.setAttribute('disabled', "");
 
-        let resetButton = this.#qc.get("[type=reset]");
+        let resetButton = this.#qc.querySelector("[type=reset]");
         (circles + squares)
             ? resetButton?.removeAttribute('disabled')
             : resetButton?.setAttribute('disabled', "");

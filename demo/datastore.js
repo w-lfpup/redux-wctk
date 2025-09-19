@@ -8,7 +8,7 @@
   modifications to work with web components or the WCTK.
 */
 import { configureStore, createSlice } from '@reduxjs/toolkit';
-// EASY TO MISS! Load initial state!
+// !!! EASY TO MISS !!! Load initial state!
 import initialState from "./state.json" with { type: "json" };
 function removeShape(shapeList, shape) {
     const index = shapeList.lastIndexOf(shape);
@@ -48,10 +48,9 @@ const datastore = configureStore({
     reducer: shapeSlice.reducer
 });
 // This is a minimal redux API for web components
-const { subscribe, getState, dispatch } = datastore;
+export const { subscribe, getState, dispatch } = datastore;
 // Required for WCTK to remove subscriptions with the result of `subscribe()`
-function unsubscribe(cb) {
+export function unsubscribe(cb) {
     if (cb)
         cb();
 }
-export { datastore, subscribe, getState, dispatch, unsubscribe };
