@@ -8,7 +8,7 @@ export class ShapeList extends HTMLElement {
         callback: this.#mc.queue,
         connected: true,
         subscribe,
-        unsubscribe
+        unsubscribe,
     });
     #render() {
         let state = getState();
