@@ -1,6 +1,6 @@
 {
 	"extends": "../tsconfig.json",
 	"compilerOptions": {
-		"paths": { "datastore": ["./datastore/datastore.ts"] },
+		"paths": { "datastore": ["./datastore/datastore.ts"] }
 	}
 }

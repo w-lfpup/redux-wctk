@@ -2,6 +2,7 @@ import { Wc, Events, Microtask, Subscription, QuerySelector } from "wctk";
 import { dispatch, getState, subscribe, unsubscribe } from "../datastore.js";
 export class ShapeControls extends HTMLElement {
     #wc = new Wc({ host: this });
+    #qc = new QuerySelector({ parent: this.#wc.shadowRoot });
     #mc = new Microtask({ host: this, callback: this.#render });
     #ec = new Events({
         host: this,
@@ -18,7 +19,6 @@ export class ShapeControls extends HTMLElement {
         subscribe,
         unsubscribe
     });
-    #qc = new QuerySelector({ parent: this.#wc.shadowRoot });
     #render() {
         let state = getState();
         let { circles, squares } = state;
