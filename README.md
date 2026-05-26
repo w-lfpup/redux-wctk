@@ -1,6 +1,6 @@
 # Wctk-Redux-SSR
 
-A demonstration of a way to build a server-side-rendered web app with web components and state management.
+A demonstration server-side-rendered webcomponents and state management.
 
 Checkout the [live demo](https://w-lfpup.github.io/wctk-redux-ssr/demo/)!
 
@@ -22,4 +22,4 @@ Then afterwards:
 
 ## License
 
-Wctk-Redux-SSR-Demo is released under the BSD-3 Clause License.
+Wctk-Redux-SSR is released under the BSD-3 Clause License.

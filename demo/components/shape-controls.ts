@@ -1,4 +1,4 @@
-import { Wc, Events, Microtask, Subscription, QuerySelector } from "wctk";
+import { Wc, Events, Microtask, Subscription, QuerySelector } from "@w-lfpup/wctk";
 import { dispatch, getState, subscribe, unsubscribe } from "../datastore.js";
 
 export class ShapeControls extends HTMLElement {

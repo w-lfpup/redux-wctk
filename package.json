@@ -1,14 +1,4 @@
 {
-	"name": "wctk-redux-ssr-demo",
-	"version": "0.1.0",
-	"description": "A server side rendered demo app using web components and redux",
-	"keywords": [
-		"webcomponents",
-		"redux",
-		"ssr"
-	],
-	"license": "BSD-3-Clause",
-	"author": "w-flpup",
 	"type": "module",
 	"scripts": {
 		"build": "npx tsc",
@@ -16,11 +6,11 @@
 		"bundle": "npx rollup --config rollup.config.js"
 	},
 	"devDependencies": {
-		"@reduxjs/toolkit": "^2.8.1",
-		"@rollup/plugin-node-resolve": "^16.0.1",
-		"prettier": "^3.6.2",
-		"rollup": "^4.40.2",
-		"typescript": "^5.8.3",
-		"wctk": "github:w-lfpup/wctk-js"
+		"@reduxjs/toolkit": "^2.12.0",
+		"@rollup/plugin-node-resolve": "^16.0.3",
+		"@w-lfpup/wctk": "^0.2.1",
+		"prettier": "^3.8.3",
+		"rollup": "^4.60.4",
+		"typescript": "^6.0.3"
 	}
 }

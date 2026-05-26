@@ -1,4 +1,4 @@
-import { Wc, Microtask, Subscription } from "wctk";
+import { Wc, Microtask, Subscription } from "@w-lfpup/wctk";
 import { getState, subscribe, unsubscribe } from "../datastore.js";
 
 export class ShapeTable extends HTMLElement {
