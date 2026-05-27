@@ -1,18 +1,18 @@
-import { Wc, Microtask, Subscription } from "@w-lfpup/wctk";
+import { Wc, Microtask } from "@w-lfpup/wctk";
 import { getState, subscribe, unsubscribe } from "../datastore.js";
 
 export class ShapeTable extends HTMLElement {
 	#wc = new Wc({ host: this });
 
-	#mc = new Microtask({ host: this, callback: this.#render });
+	#mc = new Microtask(this.#render.bind(this));
 
-	#sc = new Subscription({
-		host: this,
-		callback: this.#mc.queue,
-		connected: true,
-		subscribe,
-		unsubscribe,
-	});
+	// #sc = new Subscription({
+	// 	host: this,
+	// 	callback: this.#mc.queue,
+	// 	connected: true,
+	// 	subscribe,
+	// 	unsubscribe,
+	// });
 
 	#render() {
 		let state = getState();

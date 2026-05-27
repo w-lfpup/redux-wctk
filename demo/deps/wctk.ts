@@ -1,1 +1,1 @@
-export * from "wctk";
+export * from "@w-lfpup/wctk";

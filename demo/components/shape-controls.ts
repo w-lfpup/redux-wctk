@@ -1,27 +1,26 @@
-import { Wc, Events, Microtask, Subscription, QuerySelector } from "@w-lfpup/wctk";
+import { Wc, Events, Microtask, QuerySelector } from "@w-lfpup/wctk";
 import { dispatch, getState, subscribe, unsubscribe } from "../datastore.js";
 
 export class ShapeControls extends HTMLElement {
 	#wc = new Wc({ host: this });
 
-	#qc = new QuerySelector({ parent: this.#wc.shadowRoot });
+	#qc = new QuerySelector(this.#wc.shadowRoot);
 
-	#mc = new Microtask({ host: this, callback: this.#render });
+	#mc = new Microtask(this.#render.bind(this));
 
 	#ec = new Events({
-		host: this,
 		connected: true,
 		target: this.#wc.shadowRoot,
-		callbacks: [["click", this.#clickHandler]],
+		listeners: {click: this.#clickHandler.bind(this)},
 	});
 
-	#sc = new Subscription({
-		host: this,
-		callback: this.#mc.queue,
-		connected: true,
-		subscribe,
-		unsubscribe,
-	});
+	// #sc = new Subscription({
+	// 	host: this,
+	// 	callback: this.#mc.queue,
+	// 	connected: true,
+	// 	subscribe,
+	// 	unsubscribe,
+	// });
 
 	#render() {
 		let state = getState();
@@ -48,7 +47,7 @@ export class ShapeControls extends HTMLElement {
 			: resetButton?.setAttribute("disabled", "");
 	}
 
-	#clickHandler(e: Event) {
+	#clickHandler(e: PointerEvent) {
 		let { target } = e;
 		if (target instanceof HTMLElement) {
 			let type = target.getAttribute("action");
