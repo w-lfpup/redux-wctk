@@ -1,26 +1,11 @@
-class Bind {
-    constructor(params) {
-        let { host, callbacks } = params;
-        for (let callback of callbacks) {
-            // do not bind and replace already bound functions
-            if (callback instanceof Function &&
-                !callback.hasOwnProperty("prototype")) {
-                let { name } = callback;
-                if (!name.startsWith("#"))
-                    host[name] = callback.bind(host);
-            }
-        }
-    }
-}
-
 class Events {
     #connected = false;
-    #callbacks = [];
+    #listeners = [];
     #target;
     constructor(params) {
-        const { host, target, callbacks, connected } = params;
-        this.#target = target ?? host;
-        this.#callbacks = getBoundCallbacks(host, callbacks);
+        const { target, listeners, connected } = params;
+        this.#target = target;
+        this.#listeners = Object.entries(listeners);
         if (connected)
             this.connect();
     }
@@ -28,42 +13,28 @@ class Events {
         if (this.#connected)
             return;
         this.#connected = true;
-        for (let [name, callback] of this.#callbacks) {
-            this.#target.addEventListener(name, callback);
+        for (let [name, listener] of this.#listeners) {
+            this.#target.addEventListener(name, listener);
         }
     }
     disconnect() {
         if (!this.#connected)
             return;
         this.#connected = false;
-        for (let [name, callback] of this.#callbacks) {
-            this.#target.removeEventListener(name, callback);
+        for (let [name, listener] of this.#listeners) {
+            this.#target.removeEventListener(name, listener);
         }
     }
-}
-function getBoundCallbacks(host, callbacks) {
-    let boundCallbacks = [];
-    for (let [name, callback] of callbacks) {
-        if (callback instanceof Function && !callback.hasOwnProperty("prototype")) {
-            callback = callback.bind(host);
-        }
-        boundCallbacks.push([name, callback]);
-    }
-    return boundCallbacks;
 }
 
 class Microtask {
     #queued = false;
     #callback;
-    constructor(params) {
-        let { host, callback } = params;
-        this.queue = this.queue.bind(this);
+    queue = this.#queue.bind(this);
+    constructor(callback) {
         this.#callback = callback;
-        if (callback instanceof Function && !callback.hasOwnProperty("prototype")) {
-            this.#callback = callback.bind(host);
-        }
     }
-    queue() {
+    #queue() {
         if (this.#queued)
             return;
         this.#queued = true;
@@ -75,78 +46,54 @@ class Microtask {
     }
 }
 
-class Subscription {
-    #callback;
-    #affect;
-    #subscribe;
-    #unsubscribe;
-    constructor(params) {
-        let { host, callback, connected, subscribe, unsubscribe } = params;
-        this.#subscribe = subscribe;
-        this.#unsubscribe = unsubscribe;
-        this.#callback = callback;
-        if (callback instanceof Function && !callback.hasOwnProperty("prototype")) {
-            this.#callback = callback.bind(host);
-        }
-        if (connected)
-            this.connect();
-    }
-    connect() {
-        if (!this.#affect)
-            this.#affect = this.#subscribe(this.#callback);
-    }
-    disconnect() {
-        if (this.#affect)
-            this.#unsubscribe(this.#affect);
-    }
-}
-
 class QuerySelector {
     #queries = new Map();
-    #params;
-    constructor(params) {
-        this.#params = params;
+    #queryAlls = new Map();
+    #parentNode;
+    constructor(parentNode) {
+        this.#parentNode = parentNode;
     }
     querySelector(selector) {
-        return getQuery(this.#params, this.#queries, selector)[0];
+        if (this.#queries.has(selector))
+            return this.#queries.get(selector);
+        let query = this.#parentNode.querySelector(selector) ?? undefined;
+        this.#queries.set(selector, query);
+        return query;
     }
     querySelectorAll(selector) {
-        return getQuery(this.#params, this.#queries, selector);
+        let results = this.#queryAlls.get(selector);
+        if (results)
+            return results;
+        let query = Array.from(this.#parentNode.querySelectorAll(selector));
+        this.#queryAlls.set(selector, query);
+        return query;
     }
     deleteAll() {
         this.#queries = new Map();
+        this.#queryAlls = new Map();
     }
-}
-function getQuery(params, queries, selector) {
-    const { parent } = params;
-    let results = queries.get(selector);
-    if (!results) {
-        results = Array.from(parent.querySelectorAll(selector));
-        queries.set(selector, results);
-    }
-    return results;
 }
 
 const shadowRootInitFallback = {
     mode: "closed",
 };
 class Wc {
-    #declarative = true;
+    #declarative = false;
     #internals;
     #shadowRoot;
     constructor(params) {
-        let { host, shadowRootInit, adoptedStyleSheets, formValue, formState } = params;
+        let { adoptedStyleSheets, host, formState, formValue, shadowRootInit } = params;
         this.#internals = host.attachInternals();
-        let { shadowRoot } = this.#internals;
-        if (!shadowRoot) {
-            this.#declarative = false;
-            shadowRoot = host.attachShadow(shadowRootInit ?? shadowRootInitFallback);
+        if (this.#internals.shadowRoot) {
+            this.#declarative = true;
+            this.#shadowRoot = this.#internals.shadowRoot;
         }
-        this.#shadowRoot = shadowRoot;
+        else {
+            this.#shadowRoot = host.attachShadow(shadowRootInit ?? shadowRootInitFallback);
+        }
+        this.adoptedStyleSheets = adoptedStyleSheets ?? [];
         if (formValue)
             this.setFormValue(formValue, formState);
-        if (adoptedStyleSheets)
-            this.adoptedStyleSheets = adoptedStyleSheets;
     }
     get declarative() {
         return this.#declarative;
@@ -174,4 +121,4 @@ class Wc {
     }
 }
 
-export { Bind, Events, Microtask, QuerySelector, Subscription, Wc };
+export { Events, Microtask, QuerySelector, Wc };

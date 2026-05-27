@@ -1,5 +1,5 @@
 // src/utils/formatProdErrorMessage.ts
-function formatProdErrorMessage$1(code) {
+function formatProdErrorMessage(code) {
   return `Minified Redux error #${code}; visit https://redux.js.org/Errors?code=${code} for the full message or use the non-minified dev environment for full errors. `;
 }
 
@@ -83,10 +83,10 @@ function kindOf(val) {
 // src/createStore.ts
 function createStore(reducer, preloadedState, enhancer) {
   if (typeof reducer !== "function") {
-    throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(2) : `Expected the root reducer to be a function. Instead, received: '${kindOf(reducer)}'`);
+    throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(2) : `Expected the root reducer to be a function. Instead, received: '${kindOf(reducer)}'`);
   }
   if (typeof preloadedState === "function" && typeof enhancer === "function" || typeof enhancer === "function" && typeof arguments[3] === "function") {
-    throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(0) : "It looks like you are passing several store enhancers to createStore(). This is not supported. Instead, compose them together to a single function. See https://redux.js.org/tutorials/fundamentals/part-4-store#creating-a-store-with-enhancers for an example.");
+    throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(0) : "It looks like you are passing several store enhancers to createStore(). This is not supported. Instead, compose them together to a single function. See https://redux.js.org/tutorials/fundamentals/part-4-store#creating-a-store-with-enhancers for an example.");
   }
   if (typeof preloadedState === "function" && typeof enhancer === "undefined") {
     enhancer = preloadedState;
@@ -94,7 +94,7 @@ function createStore(reducer, preloadedState, enhancer) {
   }
   if (typeof enhancer !== "undefined") {
     if (typeof enhancer !== "function") {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(1) : `Expected the enhancer to be a function. Instead, received: '${kindOf(enhancer)}'`);
+      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(1) : `Expected the enhancer to be a function. Instead, received: '${kindOf(enhancer)}'`);
     }
     return enhancer(createStore)(reducer, preloadedState);
   }
@@ -114,16 +114,16 @@ function createStore(reducer, preloadedState, enhancer) {
   }
   function getState() {
     if (isDispatching) {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(3) : "You may not call store.getState() while the reducer is executing. The reducer has already received the state as an argument. Pass it down from the top reducer instead of reading it from the store.");
+      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(3) : "You may not call store.getState() while the reducer is executing. The reducer has already received the state as an argument. Pass it down from the top reducer instead of reading it from the store.");
     }
     return currentState;
   }
   function subscribe(listener) {
     if (typeof listener !== "function") {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(4) : `Expected the listener to be a function. Instead, received: '${kindOf(listener)}'`);
+      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(4) : `Expected the listener to be a function. Instead, received: '${kindOf(listener)}'`);
     }
     if (isDispatching) {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(5) : "You may not call store.subscribe() while the reducer is executing. If you would like to be notified after the store has been updated, subscribe from a component and invoke store.getState() in the callback to access the latest state. See https://redux.js.org/api/store#subscribelistener for more details.");
+      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(5) : "You may not call store.subscribe() while the reducer is executing. If you would like to be notified after the store has been updated, subscribe from a component and invoke store.getState() in the callback to access the latest state. See https://redux.js.org/api/store#subscribelistener for more details.");
     }
     let isSubscribed = true;
     ensureCanMutateNextListeners();
@@ -134,7 +134,7 @@ function createStore(reducer, preloadedState, enhancer) {
         return;
       }
       if (isDispatching) {
-        throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(6) : "You may not unsubscribe from a store listener while the reducer is executing. See https://redux.js.org/api/store#subscribelistener for more details.");
+        throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(6) : "You may not unsubscribe from a store listener while the reducer is executing. See https://redux.js.org/api/store#subscribelistener for more details.");
       }
       isSubscribed = false;
       ensureCanMutateNextListeners();
@@ -144,16 +144,16 @@ function createStore(reducer, preloadedState, enhancer) {
   }
   function dispatch(action) {
     if (!isPlainObject$1(action)) {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(7) : `Actions must be plain objects. Instead, the actual type was: '${kindOf(action)}'. You may need to add middleware to your store setup to handle dispatching other values, such as 'redux-thunk' to handle dispatching functions. See https://redux.js.org/tutorials/fundamentals/part-4-store#middleware and https://redux.js.org/tutorials/fundamentals/part-6-async-logic#using-the-redux-thunk-middleware for examples.`);
+      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(7) : `Actions must be plain objects. Instead, the actual type was: '${kindOf(action)}'. You may need to add middleware to your store setup to handle dispatching other values, such as 'redux-thunk' to handle dispatching functions. See https://redux.js.org/tutorials/fundamentals/part-4-store#middleware and https://redux.js.org/tutorials/fundamentals/part-6-async-logic#using-the-redux-thunk-middleware for examples.`);
     }
     if (typeof action.type === "undefined") {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(8) : 'Actions may not have an undefined "type" property. You may have misspelled an action type string constant.');
+      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(8) : 'Actions may not have an undefined "type" property. You may have misspelled an action type string constant.');
     }
     if (typeof action.type !== "string") {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(17) : `Action "type" property must be a string. Instead, the actual type was: '${kindOf(action.type)}'. Value was: '${action.type}' (stringified)`);
+      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(17) : `Action "type" property must be a string. Instead, the actual type was: '${kindOf(action.type)}'. Value was: '${action.type}' (stringified)`);
     }
     if (isDispatching) {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(9) : "Reducers may not dispatch actions.");
+      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(9) : "Reducers may not dispatch actions.");
     }
     try {
       isDispatching = true;
@@ -169,7 +169,7 @@ function createStore(reducer, preloadedState, enhancer) {
   }
   function replaceReducer(nextReducer) {
     if (typeof nextReducer !== "function") {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(10) : `Expected the nextReducer to be a function. Instead, received: '${kindOf(nextReducer)}`);
+      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(10) : `Expected the nextReducer to be a function. Instead, received: '${kindOf(nextReducer)}`);
     }
     currentReducer = nextReducer;
     dispatch({
@@ -189,7 +189,7 @@ function createStore(reducer, preloadedState, enhancer) {
        */
       subscribe(observer) {
         if (typeof observer !== "object" || observer === null) {
-          throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(11) : `Expected the observer to be an object. Instead, received: '${kindOf(observer)}'`);
+          throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(11) : `Expected the observer to be an object. Instead, received: '${kindOf(observer)}'`);
         }
         function observeState() {
           const observerAsObserver = observer;
@@ -219,6 +219,9 @@ function createStore(reducer, preloadedState, enhancer) {
     [symbol_observable_default]: observable
   };
   return store;
+}
+function legacy_createStore(reducer, preloadedState, enhancer) {
+  return createStore(reducer, preloadedState, enhancer);
 }
 
 // src/utils/warning.ts
@@ -259,12 +262,12 @@ function assertReducerShape(reducers) {
       type: actionTypes_default.INIT
     });
     if (typeof initialState === "undefined") {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(12) : `The slice reducer for key "${key}" returned undefined during initialization. If the state passed to the reducer is undefined, you must explicitly return the initial state. The initial state may not be undefined. If you don't want to set a value for this reducer, you can use null instead of undefined.`);
+      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(12) : `The slice reducer for key "${key}" returned undefined during initialization. If the state passed to the reducer is undefined, you must explicitly return the initial state. The initial state may not be undefined. If you don't want to set a value for this reducer, you can use null instead of undefined.`);
     }
     if (typeof reducer(void 0, {
       type: actionTypes_default.PROBE_UNKNOWN_ACTION()
     }) === "undefined") {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(13) : `The slice reducer for key "${key}" returned undefined when probed with a random type. Don't try to handle '${actionTypes_default.INIT}' or other actions in "redux/*" namespace. They are considered private. Instead, you must return the current state for any unknown actions, unless it is undefined, in which case you must return the initial state, regardless of the action type. The initial state may not be undefined, but can be null.`);
+      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(13) : `The slice reducer for key "${key}" returned undefined when probed with a random type. Don't try to handle '${actionTypes_default.INIT}' or other actions in "redux/*" namespace. They are considered private. Instead, you must return the current state for any unknown actions, unless it is undefined, in which case you must return the initial state, regardless of the action type. The initial state may not be undefined, but can be null.`);
     }
   });
 }
@@ -312,7 +315,7 @@ function combineReducers(reducers) {
       const nextStateForKey = reducer(previousStateForKey, action);
       if (typeof nextStateForKey === "undefined") {
         const actionType = action && action.type;
-        throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(14) : `When called with an action of type ${actionType ? `"${String(actionType)}"` : "(unknown type)"}, the slice reducer for key "${key}" returned undefined. To ignore an action, you must explicitly return the previous state. If you want this reducer to hold no value, you can return null instead of undefined.`);
+        throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(14) : `When called with an action of type ${actionType ? `"${String(actionType)}"` : "(unknown type)"}, the slice reducer for key "${key}" returned undefined. To ignore an action, you must explicitly return the previous state. If you want this reducer to hold no value, you can return null instead of undefined.`);
       }
       nextState[key] = nextStateForKey;
       hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
@@ -320,6 +323,29 @@ function combineReducers(reducers) {
     hasChanged = hasChanged || finalReducerKeys.length !== Object.keys(state).length;
     return hasChanged ? nextState : state;
   };
+}
+
+// src/bindActionCreators.ts
+function bindActionCreator(actionCreator, dispatch) {
+  return function(...args) {
+    return dispatch(actionCreator.apply(this, args));
+  };
+}
+function bindActionCreators(actionCreators, dispatch) {
+  if (typeof actionCreators === "function") {
+    return bindActionCreator(actionCreators, dispatch);
+  }
+  if (typeof actionCreators !== "object" || actionCreators === null) {
+    throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(16) : `bindActionCreators expected an object or a function, but instead received: '${kindOf(actionCreators)}'. Did you write "import ActionCreators from" instead of "import * as ActionCreators from"?`);
+  }
+  const boundActionCreators = {};
+  for (const key in actionCreators) {
+    const actionCreator = actionCreators[key];
+    if (typeof actionCreator === "function") {
+      boundActionCreators[key] = bindActionCreator(actionCreator, dispatch);
+    }
+  }
+  return boundActionCreators;
 }
 
 // src/compose.ts
@@ -338,7 +364,7 @@ function applyMiddleware(...middlewares) {
   return (createStore2) => (reducer, preloadedState) => {
     const store = createStore2(reducer, preloadedState);
     let dispatch = () => {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage$1(15) : "Dispatching while constructing your middleware is not allowed. Other middleware would not be applied to this dispatch.");
+      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(15) : "Dispatching while constructing your middleware is not allowed. Other middleware would not be applied to this dispatch.");
     };
     const middlewareAPI = {
       getState: store.getState,
@@ -398,7 +424,7 @@ var errors = process.env.NODE_ENV !== "production" ? [
 function die(error, ...args) {
   if (process.env.NODE_ENV !== "production") {
     const e = errors[error];
-    const msg = typeof e === "function" ? e.apply(null, args) : e;
+    const msg = isFunction(e) ? e.apply(null, args) : e;
     throw new Error(`[Immer] ${msg}`);
   }
   throw new Error(
@@ -407,31 +433,49 @@ function die(error, ...args) {
 }
 
 // src/utils/common.ts
-var getPrototypeOf = Object.getPrototypeOf;
-function isDraft(value) {
-  return !!value && !!value[DRAFT_STATE];
-}
+var O$1 = Object;
+var getPrototypeOf = O$1.getPrototypeOf;
+var CONSTRUCTOR = "constructor";
+var PROTOTYPE = "prototype";
+var CONFIGURABLE = "configurable";
+var ENUMERABLE = "enumerable";
+var WRITABLE = "writable";
+var VALUE = "value";
+var isDraft = (value) => !!value && !!value[DRAFT_STATE];
 function isDraftable(value) {
   if (!value)
     return false;
-  return isPlainObject(value) || Array.isArray(value) || !!value[DRAFTABLE] || !!value.constructor?.[DRAFTABLE] || isMap(value) || isSet(value);
+  return isPlainObject(value) || isArray(value) || !!value[DRAFTABLE] || !!value[CONSTRUCTOR]?.[DRAFTABLE] || isMap(value) || isSet(value);
 }
-var objectCtorString = Object.prototype.constructor.toString();
+var objectCtorString = O$1[PROTOTYPE][CONSTRUCTOR].toString();
+var cachedCtorStrings = /* @__PURE__ */ new WeakMap();
 function isPlainObject(value) {
-  if (!value || typeof value !== "object")
+  if (!value || !isObjectish(value))
     return false;
   const proto = getPrototypeOf(value);
-  if (proto === null) {
+  if (proto === null || proto === O$1[PROTOTYPE])
     return true;
-  }
-  const Ctor = Object.hasOwnProperty.call(proto, "constructor") && proto.constructor;
+  const Ctor = O$1.hasOwnProperty.call(proto, CONSTRUCTOR) && proto[CONSTRUCTOR];
   if (Ctor === Object)
     return true;
-  return typeof Ctor == "function" && Function.toString.call(Ctor) === objectCtorString;
+  if (!isFunction(Ctor))
+    return false;
+  let ctorString = cachedCtorStrings.get(Ctor);
+  if (ctorString === void 0) {
+    ctorString = Function.toString.call(Ctor);
+    cachedCtorStrings.set(Ctor, ctorString);
+  }
+  return ctorString === objectCtorString;
 }
-function each(obj, iter) {
+function original(value) {
+  if (!isDraft(value))
+    die(15, value);
+  return value[DRAFT_STATE].base_;
+}
+function each(obj, iter, strict = true) {
   if (getArchtype(obj) === 0 /* Object */) {
-    Reflect.ownKeys(obj).forEach((key) => {
+    const keys = strict ? Reflect.ownKeys(obj) : O$1.keys(obj);
+    keys.forEach((key) => {
       iter(key, obj[key], obj);
     });
   } else {
@@ -440,20 +484,21 @@ function each(obj, iter) {
 }
 function getArchtype(thing) {
   const state = thing[DRAFT_STATE];
-  return state ? state.type_ : Array.isArray(thing) ? 1 /* Array */ : isMap(thing) ? 2 /* Map */ : isSet(thing) ? 3 /* Set */ : 0 /* Object */;
+  return state ? state.type_ : isArray(thing) ? 1 /* Array */ : isMap(thing) ? 2 /* Map */ : isSet(thing) ? 3 /* Set */ : 0 /* Object */;
 }
-function has(thing, prop) {
-  return getArchtype(thing) === 2 /* Map */ ? thing.has(prop) : Object.prototype.hasOwnProperty.call(thing, prop);
-}
-function set(thing, propOrOldValue, value) {
-  const t = getArchtype(thing);
-  if (t === 2 /* Map */)
+var has = (thing, prop, type = getArchtype(thing)) => type === 2 /* Map */ ? thing.has(prop) : O$1[PROTOTYPE].hasOwnProperty.call(thing, prop);
+var get = (thing, prop, type = getArchtype(thing)) => (
+  // @ts-ignore
+  type === 2 /* Map */ ? thing.get(prop) : thing[prop]
+);
+var set = (thing, propOrOldValue, value, type = getArchtype(thing)) => {
+  if (type === 2 /* Map */)
     thing.set(propOrOldValue, value);
-  else if (t === 3 /* Set */) {
+  else if (type === 3 /* Set */) {
     thing.add(value);
   } else
     thing[propOrOldValue] = value;
-}
+};
 function is(x, y) {
   if (x === y) {
     return x !== 0 || 1 / x === 1 / y;
@@ -461,15 +506,18 @@ function is(x, y) {
     return x !== x && y !== y;
   }
 }
-function isMap(target) {
-  return target instanceof Map;
+var isArray = Array.isArray;
+var isMap = (target) => target instanceof Map;
+var isSet = (target) => target instanceof Set;
+var isObjectish = (target) => typeof target === "object";
+var isFunction = (target) => typeof target === "function";
+var isBoolean = (target) => typeof target === "boolean";
+function isArrayIndex(value) {
+  const n = +value;
+  return Number.isInteger(n) && String(n) === value;
 }
-function isSet(target) {
-  return target instanceof Set;
-}
-function latest(state) {
-  return state.copy_ || state.base_;
-}
+var latest = (state) => state.copy_ || state.base_;
+var getFinalValue = (state) => state.modified_ ? state.copy_ : state.base_;
 function shallowCopy(base, strict) {
   if (isMap(base)) {
     return new Map(base);
@@ -477,63 +525,77 @@ function shallowCopy(base, strict) {
   if (isSet(base)) {
     return new Set(base);
   }
-  if (Array.isArray(base))
-    return Array.prototype.slice.call(base);
+  if (isArray(base))
+    return Array[PROTOTYPE].slice.call(base);
   const isPlain = isPlainObject(base);
   if (strict === true || strict === "class_only" && !isPlain) {
-    const descriptors = Object.getOwnPropertyDescriptors(base);
+    const descriptors = O$1.getOwnPropertyDescriptors(base);
     delete descriptors[DRAFT_STATE];
     let keys = Reflect.ownKeys(descriptors);
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
       const desc = descriptors[key];
-      if (desc.writable === false) {
-        desc.writable = true;
-        desc.configurable = true;
+      if (desc[WRITABLE] === false) {
+        desc[WRITABLE] = true;
+        desc[CONFIGURABLE] = true;
       }
       if (desc.get || desc.set)
         descriptors[key] = {
-          configurable: true,
-          writable: true,
+          [CONFIGURABLE]: true,
+          [WRITABLE]: true,
           // could live with !!desc.set as well here...
-          enumerable: desc.enumerable,
-          value: base[key]
+          [ENUMERABLE]: desc[ENUMERABLE],
+          [VALUE]: base[key]
         };
     }
-    return Object.create(getPrototypeOf(base), descriptors);
+    return O$1.create(getPrototypeOf(base), descriptors);
   } else {
     const proto = getPrototypeOf(base);
     if (proto !== null && isPlain) {
       return { ...base };
     }
-    const obj = Object.create(proto);
-    return Object.assign(obj, base);
+    const obj = O$1.create(proto);
+    return O$1.assign(obj, base);
   }
 }
 function freeze(obj, deep = false) {
   if (isFrozen(obj) || isDraft(obj) || !isDraftable(obj))
     return obj;
   if (getArchtype(obj) > 1) {
-    Object.defineProperties(obj, {
-      set: { value: dontMutateFrozenCollections },
-      add: { value: dontMutateFrozenCollections },
-      clear: { value: dontMutateFrozenCollections },
-      delete: { value: dontMutateFrozenCollections }
+    O$1.defineProperties(obj, {
+      set: dontMutateMethodOverride,
+      add: dontMutateMethodOverride,
+      clear: dontMutateMethodOverride,
+      delete: dontMutateMethodOverride
     });
   }
-  Object.freeze(obj);
+  O$1.freeze(obj);
   if (deep)
-    Object.values(obj).forEach((value) => freeze(value, true));
+    each(
+      obj,
+      (_key, value) => {
+        freeze(value, true);
+      },
+      false
+    );
   return obj;
 }
 function dontMutateFrozenCollections() {
   die(2);
 }
+var dontMutateMethodOverride = {
+  [VALUE]: dontMutateFrozenCollections
+};
 function isFrozen(obj) {
-  return Object.isFrozen(obj);
+  if (obj === null || !isObjectish(obj))
+    return true;
+  return O$1.isFrozen(obj);
 }
 
 // src/utils/plugins.ts
+var PluginMapSet = "MapSet";
+var PluginPatches = "Patches";
+var PluginArrayMethods = "ArrayMethods";
 var plugins = {};
 function getPlugin(pluginKey) {
   const plugin = plugins[pluginKey];
@@ -542,26 +604,27 @@ function getPlugin(pluginKey) {
   }
   return plugin;
 }
+var isPluginLoaded = (pluginKey) => !!plugins[pluginKey];
 
 // src/core/scope.ts
 var currentScope;
-function getCurrentScope() {
-  return currentScope;
-}
-function createScope(parent_, immer_) {
-  return {
-    drafts_: [],
-    parent_,
-    immer_,
-    // Whenever the modified draft contains a draft from another scope, we
-    // need to prevent auto-freezing so the unowned draft can be finalized.
-    canAutoFreeze_: true,
-    unfinalizedDrafts_: 0
-  };
-}
+var getCurrentScope = () => currentScope;
+var createScope = (parent_, immer_) => ({
+  drafts_: [],
+  parent_,
+  immer_,
+  // Whenever the modified draft contains a draft from another scope, we
+  // need to prevent auto-freezing so the unowned draft can be finalized.
+  canAutoFreeze_: true,
+  unfinalizedDrafts_: 0,
+  handledSet_: /* @__PURE__ */ new Set(),
+  processedForPatches_: /* @__PURE__ */ new Set(),
+  mapSetPlugin_: isPluginLoaded(PluginMapSet) ? getPlugin(PluginMapSet) : void 0,
+  arrayMethodsPlugin_: isPluginLoaded(PluginArrayMethods) ? getPlugin(PluginArrayMethods) : void 0
+});
 function usePatchesInScope(scope, patchListener) {
   if (patchListener) {
-    getPlugin("Patches");
+    scope.patchPlugin_ = getPlugin(PluginPatches);
     scope.patches_ = [];
     scope.inversePatches_ = [];
     scope.patchListener_ = patchListener;
@@ -577,9 +640,7 @@ function leaveScope(scope) {
     currentScope = scope.parent_;
   }
 }
-function enterScope(immer2) {
-  return currentScope = createScope(currentScope, immer2);
-}
+var enterScope = (immer2) => currentScope = createScope(currentScope, immer2);
 function revokeDraft(draft) {
   const state = draft[DRAFT_STATE];
   if (state.type_ === 0 /* Object */ || state.type_ === 1 /* Array */)
@@ -600,105 +661,172 @@ function processResult(result, scope) {
     }
     if (isDraftable(result)) {
       result = finalize(scope, result);
-      if (!scope.parent_)
-        maybeFreeze(scope, result);
     }
-    if (scope.patches_) {
-      getPlugin("Patches").generateReplacementPatches_(
+    const { patchPlugin_ } = scope;
+    if (patchPlugin_) {
+      patchPlugin_.generateReplacementPatches_(
         baseDraft[DRAFT_STATE].base_,
         result,
-        scope.patches_,
-        scope.inversePatches_
+        scope
       );
     }
   } else {
-    result = finalize(scope, baseDraft, []);
+    result = finalize(scope, baseDraft);
   }
+  maybeFreeze(scope, result, true);
   revokeScope(scope);
   if (scope.patches_) {
     scope.patchListener_(scope.patches_, scope.inversePatches_);
   }
   return result !== NOTHING ? result : void 0;
 }
-function finalize(rootScope, value, path) {
+function finalize(rootScope, value) {
   if (isFrozen(value))
     return value;
   const state = value[DRAFT_STATE];
   if (!state) {
-    each(
-      value,
-      (key, childValue) => finalizeProperty(rootScope, state, value, key, childValue, path)
-    );
+    const finalValue = handleValue(value, rootScope.handledSet_, rootScope);
+    return finalValue;
+  }
+  if (!isSameScope(state, rootScope)) {
     return value;
   }
-  if (state.scope_ !== rootScope)
-    return value;
   if (!state.modified_) {
-    maybeFreeze(rootScope, state.base_, true);
     return state.base_;
   }
   if (!state.finalized_) {
-    state.finalized_ = true;
-    state.scope_.unfinalizedDrafts_--;
-    const result = state.copy_;
-    let resultEach = result;
-    let isSet2 = false;
-    if (state.type_ === 3 /* Set */) {
-      resultEach = new Set(result);
-      result.clear();
-      isSet2 = true;
+    const { callbacks_ } = state;
+    if (callbacks_) {
+      while (callbacks_.length > 0) {
+        const callback = callbacks_.pop();
+        callback(rootScope);
+      }
     }
-    each(
-      resultEach,
-      (key, childValue) => finalizeProperty(rootScope, state, result, key, childValue, path, isSet2)
-    );
-    maybeFreeze(rootScope, result, false);
-    if (path && rootScope.patches_) {
-      getPlugin("Patches").generatePatches_(
-        state,
-        path,
-        rootScope.patches_,
-        rootScope.inversePatches_
-      );
-    }
+    generatePatchesAndFinalize(state, rootScope);
   }
   return state.copy_;
-}
-function finalizeProperty(rootScope, parentState, targetObject, prop, childValue, rootPath, targetIsSet) {
-  if (process.env.NODE_ENV !== "production" && childValue === targetObject)
-    die(5);
-  if (isDraft(childValue)) {
-    const path = rootPath && parentState && parentState.type_ !== 3 /* Set */ && // Set objects are atomic since they have no keys.
-    !has(parentState.assigned_, prop) ? rootPath.concat(prop) : void 0;
-    const res = finalize(rootScope, childValue, path);
-    set(targetObject, prop, res);
-    if (isDraft(res)) {
-      rootScope.canAutoFreeze_ = false;
-    } else
-      return;
-  } else if (targetIsSet) {
-    targetObject.add(childValue);
-  }
-  if (isDraftable(childValue) && !isFrozen(childValue)) {
-    if (!rootScope.immer_.autoFreeze_ && rootScope.unfinalizedDrafts_ < 1) {
-      return;
-    }
-    finalize(rootScope, childValue);
-    if ((!parentState || !parentState.scope_.parent_) && typeof prop !== "symbol" && (isMap(targetObject) ? targetObject.has(prop) : Object.prototype.propertyIsEnumerable.call(targetObject, prop)))
-      maybeFreeze(rootScope, childValue);
-  }
 }
 function maybeFreeze(scope, value, deep = false) {
   if (!scope.parent_ && scope.immer_.autoFreeze_ && scope.canAutoFreeze_) {
     freeze(value, deep);
   }
 }
+function markStateFinalized(state) {
+  state.finalized_ = true;
+  state.scope_.unfinalizedDrafts_--;
+}
+var isSameScope = (state, rootScope) => state.scope_ === rootScope;
+var EMPTY_LOCATIONS_RESULT = [];
+function updateDraftInParent(parent, draftValue, finalizedValue, originalKey) {
+  const parentCopy = latest(parent);
+  const parentType = parent.type_;
+  if (originalKey !== void 0) {
+    const currentValue = get(parentCopy, originalKey, parentType);
+    if (currentValue === draftValue) {
+      set(parentCopy, originalKey, finalizedValue, parentType);
+      return;
+    }
+  }
+  if (!parent.draftLocations_) {
+    const draftLocations = parent.draftLocations_ = /* @__PURE__ */ new Map();
+    each(parentCopy, (key, value) => {
+      if (isDraft(value)) {
+        const keys = draftLocations.get(value) || [];
+        keys.push(key);
+        draftLocations.set(value, keys);
+      }
+    });
+  }
+  const locations = parent.draftLocations_.get(draftValue) ?? EMPTY_LOCATIONS_RESULT;
+  for (const location of locations) {
+    set(parentCopy, location, finalizedValue, parentType);
+  }
+}
+function registerChildFinalizationCallback(parent, child, key) {
+  parent.callbacks_.push(function childCleanup(rootScope) {
+    const state = child;
+    if (!state || !isSameScope(state, rootScope)) {
+      return;
+    }
+    rootScope.mapSetPlugin_?.fixSetContents(state);
+    const finalizedValue = getFinalValue(state);
+    updateDraftInParent(parent, state.draft_ ?? state, finalizedValue, key);
+    generatePatchesAndFinalize(state, rootScope);
+  });
+}
+function generatePatchesAndFinalize(state, rootScope) {
+  const shouldFinalize = state.modified_ && !state.finalized_ && (state.type_ === 3 /* Set */ || state.type_ === 1 /* Array */ && state.allIndicesReassigned_ || (state.assigned_?.size ?? 0) > 0);
+  if (shouldFinalize) {
+    const { patchPlugin_ } = rootScope;
+    if (patchPlugin_) {
+      const basePath = patchPlugin_.getPath(state);
+      if (basePath) {
+        patchPlugin_.generatePatches_(state, basePath, rootScope);
+      }
+    }
+    markStateFinalized(state);
+  }
+}
+function handleCrossReference(target, key, value) {
+  const { scope_ } = target;
+  if (isDraft(value)) {
+    const state = value[DRAFT_STATE];
+    if (isSameScope(state, scope_)) {
+      state.callbacks_.push(function crossReferenceCleanup() {
+        prepareCopy(target);
+        const finalizedValue = getFinalValue(state);
+        updateDraftInParent(target, value, finalizedValue, key);
+      });
+    }
+  } else if (isDraftable(value)) {
+    target.callbacks_.push(function nestedDraftCleanup() {
+      const targetCopy = latest(target);
+      if (target.type_ === 3 /* Set */) {
+        if (targetCopy.has(value)) {
+          handleValue(value, scope_.handledSet_, scope_);
+        }
+      } else {
+        if (get(targetCopy, key, target.type_) === value) {
+          if (scope_.drafts_.length > 1 && (target.assigned_.get(key) ?? false) === true && target.copy_) {
+            handleValue(
+              get(target.copy_, key, target.type_),
+              scope_.handledSet_,
+              scope_
+            );
+          }
+        }
+      }
+    });
+  }
+}
+function handleValue(target, handledSet, rootScope) {
+  if (!rootScope.immer_.autoFreeze_ && rootScope.unfinalizedDrafts_ < 1) {
+    return target;
+  }
+  if (isDraft(target) || handledSet.has(target) || !isDraftable(target) || isFrozen(target)) {
+    return target;
+  }
+  handledSet.add(target);
+  each(target, (key, value) => {
+    if (isDraft(value)) {
+      const state = value[DRAFT_STATE];
+      if (isSameScope(state, rootScope)) {
+        const updatedValue = getFinalValue(state);
+        set(target, key, updatedValue, target.type_);
+        markStateFinalized(state);
+      }
+    } else if (isDraftable(value)) {
+      handleValue(value, handledSet, rootScope);
+    }
+  });
+  return target;
+}
 
 // src/core/proxy.ts
 function createProxyProxy(base, parent) {
-  const isArray = Array.isArray(base);
+  const baseIsArray = isArray(base);
   const state = {
-    type_: isArray ? 1 /* Array */ : 0 /* Object */,
+    type_: baseIsArray ? 1 /* Array */ : 0 /* Object */,
     // Track which produce call this is associated with.
     scope_: parent ? parent.scope_ : getCurrentScope(),
     // True for both shallow and deep changes.
@@ -706,7 +834,8 @@ function createProxyProxy(base, parent) {
     // Used during finalization.
     finalized_: false,
     // Track which properties have been assigned (true) or deleted (false).
-    assigned_: {},
+    // actually instantiated in `prepareCopy()`
+    assigned_: void 0,
     // The parent draft state.
     parent_: parent,
     // The base state.
@@ -718,34 +847,50 @@ function createProxyProxy(base, parent) {
     copy_: null,
     // Called by the `produce` function.
     revoke_: null,
-    isManual_: false
+    isManual_: false,
+    // `callbacks` actually gets assigned in `createProxy`
+    callbacks_: void 0
   };
   let target = state;
   let traps = objectTraps;
-  if (isArray) {
+  if (baseIsArray) {
     target = [state];
     traps = arrayTraps;
   }
   const { revoke, proxy } = Proxy.revocable(target, traps);
   state.draft_ = proxy;
   state.revoke_ = revoke;
-  return proxy;
+  return [proxy, state];
 }
 var objectTraps = {
   get(state, prop) {
     if (prop === DRAFT_STATE)
       return state;
+    let arrayPlugin = state.scope_.arrayMethodsPlugin_;
+    const isArrayWithStringProp = state.type_ === 1 /* Array */ && typeof prop === "string";
+    if (isArrayWithStringProp) {
+      if (arrayPlugin?.isArrayOperationMethod(prop)) {
+        return arrayPlugin.createMethodInterceptor(state, prop);
+      }
+    }
     const source = latest(state);
-    if (!has(source, prop)) {
+    if (!has(source, prop, state.type_)) {
       return readPropFromProto(state, source, prop);
     }
     const value = source[prop];
     if (state.finalized_ || !isDraftable(value)) {
       return value;
     }
+    if (isArrayWithStringProp && state.operationMethod && arrayPlugin?.isMutatingArrayMethod(
+      state.operationMethod
+    ) && isArrayIndex(prop)) {
+      return value;
+    }
     if (value === peek(state.base_, prop)) {
       prepareCopy(state);
-      return state.copy_[prop] = createProxy(value, state);
+      const childKey = state.type_ === 1 /* Array */ ? +prop : prop;
+      const childDraft = createProxy(state.scope_, value, state, childKey);
+      return state.copy_[childKey] = childDraft;
     }
     return value;
   },
@@ -766,10 +911,10 @@ var objectTraps = {
       const currentState = current2?.[DRAFT_STATE];
       if (currentState && currentState.base_ === value) {
         state.copy_[prop] = value;
-        state.assigned_[prop] = false;
+        state.assigned_.set(prop, false);
         return true;
       }
-      if (is(value, current2) && (value !== void 0 || has(state.base_, prop)))
+      if (is(value, current2) && (value !== void 0 || has(state.base_, prop, state.type_)))
         return true;
       prepareCopy(state);
       markChanged(state);
@@ -779,16 +924,17 @@ var objectTraps = {
     Number.isNaN(value) && Number.isNaN(state.copy_[prop]))
       return true;
     state.copy_[prop] = value;
-    state.assigned_[prop] = true;
+    state.assigned_.set(prop, true);
+    handleCrossReference(state, prop, value);
     return true;
   },
   deleteProperty(state, prop) {
+    prepareCopy(state);
     if (peek(state.base_, prop) !== void 0 || prop in state.base_) {
-      state.assigned_[prop] = false;
-      prepareCopy(state);
+      state.assigned_.set(prop, false);
       markChanged(state);
     } else {
-      delete state.assigned_[prop];
+      state.assigned_.delete(prop);
     }
     if (state.copy_) {
       delete state.copy_[prop];
@@ -803,10 +949,10 @@ var objectTraps = {
     if (!desc)
       return desc;
     return {
-      writable: true,
-      configurable: state.type_ !== 1 /* Array */ || prop !== "length",
-      enumerable: desc.enumerable,
-      value: owner[prop]
+      [WRITABLE]: true,
+      [CONFIGURABLE]: state.type_ !== 1 /* Array */ || prop !== "length",
+      [ENUMERABLE]: desc[ENUMERABLE],
+      [VALUE]: owner[prop]
     };
   },
   defineProperty() {
@@ -820,12 +966,14 @@ var objectTraps = {
   }
 };
 var arrayTraps = {};
-each(objectTraps, (key, fn) => {
+for (let key in objectTraps) {
+  let fn = objectTraps[key];
   arrayTraps[key] = function() {
-    arguments[0] = arguments[0][0];
-    return fn.apply(this, arguments);
+    const args = arguments;
+    args[0] = args[0][0];
+    return fn.apply(this, args);
   };
-});
+}
 arrayTraps.deleteProperty = function(state, prop) {
   if (process.env.NODE_ENV !== "production" && isNaN(parseInt(prop)))
     die(13);
@@ -843,7 +991,7 @@ function peek(draft, prop) {
 }
 function readPropFromProto(state, source, prop) {
   const desc = getDescriptorFromProto(source, prop);
-  return desc ? `value` in desc ? desc.value : (
+  return desc ? VALUE in desc ? desc[VALUE] : (
     // This is a very special case, if the prop is a getter defined by the
     // prototype, we should invoke it with the draft as context!
     desc.get?.call(state.draft_)
@@ -871,6 +1019,7 @@ function markChanged(state) {
 }
 function prepareCopy(state) {
   if (!state.copy_) {
+    state.assigned_ = /* @__PURE__ */ new Map();
     state.copy_ = shallowCopy(
       state.base_,
       state.scope_.immer_.useStrictShallowCopy_
@@ -883,6 +1032,7 @@ var Immer2 = class {
   constructor(config) {
     this.autoFreeze_ = true;
     this.useStrictShallowCopy_ = false;
+    this.useStrictIteration_ = false;
     /**
      * The `produce` function takes a value and a "recipe function" (whose
      * return value often depends on the base state). The recipe function is
@@ -903,7 +1053,7 @@ var Immer2 = class {
      * @returns {any} a new state, or the initial state if nothing was modified
      */
     this.produce = (base, recipe, patchListener) => {
-      if (typeof base === "function" && typeof recipe !== "function") {
+      if (isFunction(base) && !isFunction(recipe)) {
         const defaultBase = recipe;
         recipe = base;
         const self = this;
@@ -911,14 +1061,14 @@ var Immer2 = class {
           return self.produce(base2, (draft) => recipe.call(this, draft, ...args));
         };
       }
-      if (typeof recipe !== "function")
+      if (!isFunction(recipe))
         die(6);
-      if (patchListener !== void 0 && typeof patchListener !== "function")
+      if (patchListener !== void 0 && !isFunction(patchListener))
         die(7);
       let result;
       if (isDraftable(base)) {
         const scope = enterScope(this);
-        const proxy = createProxy(base, void 0);
+        const proxy = createProxy(scope, base, void 0);
         let hasError = true;
         try {
           result = recipe(proxy);
@@ -931,7 +1081,7 @@ var Immer2 = class {
         }
         usePatchesInScope(scope, patchListener);
         return processResult(result, scope);
-      } else if (!base || typeof base !== "object") {
+      } else if (!base || !isObjectish(base)) {
         result = recipe(base);
         if (result === void 0)
           result = base;
@@ -942,7 +1092,10 @@ var Immer2 = class {
         if (patchListener) {
           const p = [];
           const ip = [];
-          getPlugin("Patches").generateReplacementPatches_(base, result, p, ip);
+          getPlugin(PluginPatches).generateReplacementPatches_(base, result, {
+            patches_: p,
+            inversePatches_: ip
+          });
           patchListener(p, ip);
         }
         return result;
@@ -950,7 +1103,7 @@ var Immer2 = class {
         die(1, base);
     };
     this.produceWithPatches = (base, recipe) => {
-      if (typeof base === "function") {
+      if (isFunction(base)) {
         return (state, ...args) => this.produceWithPatches(state, (draft) => base(draft, ...args));
       }
       let patches, inversePatches;
@@ -960,10 +1113,12 @@ var Immer2 = class {
       });
       return [result, patches, inversePatches];
     };
-    if (typeof config?.autoFreeze === "boolean")
+    if (isBoolean(config?.autoFreeze))
       this.setAutoFreeze(config.autoFreeze);
-    if (typeof config?.useStrictShallowCopy === "boolean")
+    if (isBoolean(config?.useStrictShallowCopy))
       this.setUseStrictShallowCopy(config.useStrictShallowCopy);
+    if (isBoolean(config?.useStrictIteration))
+      this.setUseStrictIteration(config.useStrictIteration);
   }
   createDraft(base) {
     if (!isDraftable(base))
@@ -971,7 +1126,7 @@ var Immer2 = class {
     if (isDraft(base))
       base = current(base);
     const scope = enterScope(this);
-    const proxy = createProxy(base, void 0);
+    const proxy = createProxy(scope, base, void 0);
     proxy[DRAFT_STATE].isManual_ = true;
     leaveScope(scope);
     return proxy;
@@ -1000,6 +1155,18 @@ var Immer2 = class {
   setUseStrictShallowCopy(value) {
     this.useStrictShallowCopy_ = value;
   }
+  /**
+   * Pass false to use faster iteration that skips non-enumerable properties
+   * but still handles symbols for compatibility.
+   *
+   * By default, strict iteration is enabled (includes all own properties).
+   */
+  setUseStrictIteration(value) {
+    this.useStrictIteration_ = value;
+  }
+  shouldUseStrictIteration() {
+    return this.useStrictIteration_;
+  }
   applyPatches(base, patches) {
     let i;
     for (i = patches.length - 1; i >= 0; i--) {
@@ -1012,7 +1179,7 @@ var Immer2 = class {
     if (i > -1) {
       patches = patches.slice(i + 1);
     }
-    const applyPatchesImpl = getPlugin("Patches").applyPatches_;
+    const applyPatchesImpl = getPlugin(PluginPatches).applyPatches_;
     if (isDraft(base)) {
       return applyPatchesImpl(base, patches);
     }
@@ -1022,10 +1189,23 @@ var Immer2 = class {
     );
   }
 };
-function createProxy(value, parent) {
-  const draft = isMap(value) ? getPlugin("MapSet").proxyMap_(value, parent) : isSet(value) ? getPlugin("MapSet").proxySet_(value, parent) : createProxyProxy(value, parent);
-  const scope = parent ? parent.scope_ : getCurrentScope();
+function createProxy(rootScope, value, parent, key) {
+  const [draft, state] = isMap(value) ? getPlugin(PluginMapSet).proxyMap_(value, parent) : isSet(value) ? getPlugin(PluginMapSet).proxySet_(value, parent) : createProxyProxy(value, parent);
+  const scope = parent?.scope_ ?? getCurrentScope();
   scope.drafts_.push(draft);
+  state.callbacks_ = parent?.callbacks_ ?? [];
+  state.key_ = key;
+  if (parent && key !== void 0) {
+    registerChildFinalizationCallback(parent, state, key);
+  } else {
+    state.callbacks_.push(function rootDraftCleanup(rootScope2) {
+      rootScope2.mapSetPlugin_?.fixSetContents(state);
+      const { patchPlugin_ } = rootScope2;
+      if (state.modified_ && patchPlugin_) {
+        patchPlugin_.generatePatches_(state, [], rootScope2);
+      }
+    });
+  }
   return draft;
 }
 
@@ -1040,17 +1220,23 @@ function currentImpl(value) {
     return value;
   const state = value[DRAFT_STATE];
   let copy;
+  let strict = true;
   if (state) {
     if (!state.modified_)
       return state.base_;
     state.finalized_ = true;
     copy = shallowCopy(value, state.scope_.immer_.useStrictShallowCopy_);
+    strict = state.scope_.immer_.shouldUseStrictIteration();
   } else {
     copy = shallowCopy(value, true);
   }
-  each(copy, (key, childValue) => {
-    set(copy, key, currentImpl(childValue));
-  });
+  each(
+    copy,
+    (key, childValue) => {
+      set(copy, key, currentImpl(childValue));
+    },
+    strict
+  );
   if (state) {
     state.finalized_ = false;
   }
@@ -1060,6 +1246,410 @@ function currentImpl(value) {
 // src/immer.ts
 var immer = new Immer2();
 var produce = immer.produce;
+
+// src/devModeChecks/identityFunctionCheck.ts
+var runIdentityFunctionCheck = (resultFunc, inputSelectorsResults, outputSelectorResult) => {
+  if (inputSelectorsResults.length === 1 && inputSelectorsResults[0] === outputSelectorResult) {
+    let isInputSameAsOutput = false;
+    try {
+      const emptyObject = {};
+      if (resultFunc(emptyObject) === emptyObject) isInputSameAsOutput = true;
+    } catch {
+    }
+    if (isInputSameAsOutput) {
+      let stack = void 0;
+      try {
+        throw new Error();
+      } catch (e) {
+        ({ stack } = e);
+      }
+      console.warn(
+        "The result function returned its own inputs without modification. e.g\n`createSelector([state => state.todos], todos => todos)`\nThis could lead to inefficient memoization and unnecessary re-renders.\nEnsure transformation logic is in the result function, and extraction logic is in the input selectors.",
+        { stack }
+      );
+    }
+  }
+};
+
+// src/devModeChecks/inputStabilityCheck.ts
+var runInputStabilityCheck = (inputSelectorResultsObject, options, inputSelectorArgs) => {
+  const { memoize, memoizeOptions } = options;
+  const { inputSelectorResults, inputSelectorResultsCopy } = inputSelectorResultsObject;
+  const createAnEmptyObject = memoize(() => ({}), ...memoizeOptions);
+  const areInputSelectorResultsEqual = createAnEmptyObject.apply(null, inputSelectorResults) === createAnEmptyObject.apply(null, inputSelectorResultsCopy);
+  if (!areInputSelectorResultsEqual) {
+    let stack = void 0;
+    try {
+      throw new Error();
+    } catch (e) {
+      ({ stack } = e);
+    }
+    console.warn(
+      "An input selector returned a different result when passed same arguments.\nThis means your output selector will likely run more frequently than intended.\nAvoid returning a new reference inside your input selector, e.g.\n`createSelector([state => state.todos.map(todo => todo.id)], todoIds => todoIds.length)`",
+      {
+        arguments: inputSelectorArgs,
+        firstInputs: inputSelectorResults,
+        secondInputs: inputSelectorResultsCopy,
+        stack
+      }
+    );
+  }
+};
+
+// src/devModeChecks/setGlobalDevModeChecks.ts
+var globalDevModeChecks = {
+  inputStabilityCheck: "once",
+  identityFunctionCheck: "once"
+};
+
+// src/utils.ts
+var NOT_FOUND = /* @__PURE__ */ Symbol("NOT_FOUND");
+function assertIsFunction(func, errorMessage = `expected a function, instead received ${typeof func}`) {
+  if (typeof func !== "function") {
+    throw new TypeError(errorMessage);
+  }
+}
+function assertIsArrayOfFunctions(array, errorMessage = `expected all items to be functions, instead received the following types: `) {
+  if (!array.every((item) => typeof item === "function")) {
+    const itemTypes = array.map(
+      (item) => typeof item === "function" ? `function ${item.name || "unnamed"}()` : typeof item
+    ).join(", ");
+    throw new TypeError(`${errorMessage}[${itemTypes}]`);
+  }
+}
+var ensureIsArray = (item) => {
+  return Array.isArray(item) ? item : [item];
+};
+function getDependencies(createSelectorArgs) {
+  const dependencies = Array.isArray(createSelectorArgs[0]) ? createSelectorArgs[0] : createSelectorArgs;
+  assertIsArrayOfFunctions(
+    dependencies,
+    `createSelector expects all input-selectors to be functions, but received the following types: `
+  );
+  return dependencies;
+}
+function collectInputSelectorResults(dependencies, inputSelectorArgs) {
+  const inputSelectorResults = [];
+  const { length } = dependencies;
+  for (let i = 0; i < length; i++) {
+    inputSelectorResults.push(dependencies[i].apply(null, inputSelectorArgs));
+  }
+  return inputSelectorResults;
+}
+var getDevModeChecksExecutionInfo = (firstRun, devModeChecks) => {
+  const { identityFunctionCheck, inputStabilityCheck } = {
+    ...globalDevModeChecks,
+    ...devModeChecks
+  };
+  return {
+    identityFunctionCheck: {
+      shouldRun: identityFunctionCheck === "always" || identityFunctionCheck === "once" && firstRun,
+      run: runIdentityFunctionCheck
+    },
+    inputStabilityCheck: {
+      shouldRun: inputStabilityCheck === "always" || inputStabilityCheck === "once" && firstRun,
+      run: runInputStabilityCheck
+    }
+  };
+};
+
+// src/lruMemoize.ts
+function createSingletonCache(equals) {
+  let entry;
+  return {
+    get(key) {
+      if (entry && equals(entry.key, key)) {
+        return entry.value;
+      }
+      return NOT_FOUND;
+    },
+    put(key, value) {
+      entry = { key, value };
+    },
+    getEntries() {
+      return entry ? [entry] : [];
+    },
+    clear() {
+      entry = void 0;
+    }
+  };
+}
+function createLruCache(maxSize, equals) {
+  let entries = [];
+  function get(key) {
+    const cacheIndex = entries.findIndex((entry) => equals(key, entry.key));
+    if (cacheIndex > -1) {
+      const entry = entries[cacheIndex];
+      if (cacheIndex > 0) {
+        entries.splice(cacheIndex, 1);
+        entries.unshift(entry);
+      }
+      return entry.value;
+    }
+    return NOT_FOUND;
+  }
+  function put(key, value) {
+    if (get(key) === NOT_FOUND) {
+      entries.unshift({ key, value });
+      if (entries.length > maxSize) {
+        entries.pop();
+      }
+    }
+  }
+  function getEntries() {
+    return entries;
+  }
+  function clear() {
+    entries = [];
+  }
+  return { get, put, getEntries, clear };
+}
+var referenceEqualityCheck = (a, b) => a === b;
+function createCacheKeyComparator(equalityCheck) {
+  return function areArgumentsShallowlyEqual(prev, next) {
+    if (prev === null || next === null || prev.length !== next.length) {
+      return false;
+    }
+    const { length } = prev;
+    for (let i = 0; i < length; i++) {
+      if (!equalityCheck(prev[i], next[i])) {
+        return false;
+      }
+    }
+    return true;
+  };
+}
+function lruMemoize(func, equalityCheckOrOptions) {
+  const providedOptions = typeof equalityCheckOrOptions === "object" ? equalityCheckOrOptions : { equalityCheck: equalityCheckOrOptions };
+  const {
+    equalityCheck = referenceEqualityCheck,
+    maxSize = 1,
+    resultEqualityCheck
+  } = providedOptions;
+  const comparator = createCacheKeyComparator(equalityCheck);
+  let resultsCount = 0;
+  const cache = maxSize <= 1 ? createSingletonCache(comparator) : createLruCache(maxSize, comparator);
+  function memoized() {
+    let value = cache.get(arguments);
+    if (value === NOT_FOUND) {
+      value = func.apply(null, arguments);
+      resultsCount++;
+      if (resultEqualityCheck) {
+        const entries = cache.getEntries();
+        const matchingEntry = entries.find(
+          (entry) => resultEqualityCheck(entry.value, value)
+        );
+        if (matchingEntry) {
+          value = matchingEntry.value;
+          resultsCount !== 0 && resultsCount--;
+        }
+      }
+      cache.put(arguments, value);
+    }
+    return value;
+  }
+  memoized.clearCache = () => {
+    cache.clear();
+    memoized.resetResultsCount();
+  };
+  memoized.resultsCount = () => resultsCount;
+  memoized.resetResultsCount = () => {
+    resultsCount = 0;
+  };
+  return memoized;
+}
+
+// src/weakMapMemoize.ts
+var StrongRef = class {
+  constructor(value) {
+    this.value = value;
+  }
+  deref() {
+    return this.value;
+  }
+};
+var getWeakRef = () => typeof WeakRef === "undefined" ? StrongRef : WeakRef;
+var Ref = /* @__PURE__ */ getWeakRef();
+var UNTERMINATED = 0;
+var TERMINATED = 1;
+function createCacheNode() {
+  return {
+    s: UNTERMINATED,
+    v: void 0,
+    o: null,
+    p: null
+  };
+}
+function maybeDeref(r) {
+  if (r instanceof Ref) {
+    return r.deref();
+  }
+  return r;
+}
+function weakMapMemoize(func, options = {}) {
+  let fnNode = createCacheNode();
+  const { resultEqualityCheck } = options;
+  let lastResult;
+  let resultsCount = 0;
+  function memoized() {
+    let cacheNode = fnNode;
+    const { length } = arguments;
+    for (let i = 0, l = length; i < l; i++) {
+      const arg = arguments[i];
+      if (typeof arg === "function" || typeof arg === "object" && arg !== null) {
+        let objectCache = cacheNode.o;
+        if (objectCache === null) {
+          cacheNode.o = objectCache = /* @__PURE__ */ new WeakMap();
+        }
+        const objectNode = objectCache.get(arg);
+        if (objectNode === void 0) {
+          cacheNode = createCacheNode();
+          objectCache.set(arg, cacheNode);
+        } else {
+          cacheNode = objectNode;
+        }
+      } else {
+        let primitiveCache = cacheNode.p;
+        if (primitiveCache === null) {
+          cacheNode.p = primitiveCache = /* @__PURE__ */ new Map();
+        }
+        const primitiveNode = primitiveCache.get(arg);
+        if (primitiveNode === void 0) {
+          cacheNode = createCacheNode();
+          primitiveCache.set(arg, cacheNode);
+        } else {
+          cacheNode = primitiveNode;
+        }
+      }
+    }
+    const terminatedNode = cacheNode;
+    let result;
+    if (cacheNode.s === TERMINATED) {
+      result = cacheNode.v;
+    } else {
+      result = func.apply(null, arguments);
+      resultsCount++;
+      if (resultEqualityCheck) {
+        const lastResultValue = maybeDeref(lastResult);
+        if (lastResultValue != null && resultEqualityCheck(lastResultValue, result)) {
+          result = lastResultValue;
+          resultsCount !== 0 && resultsCount--;
+        }
+        const needsWeakRef = typeof result === "object" && result !== null || typeof result === "function";
+        lastResult = needsWeakRef ? /* @__PURE__ */ new Ref(result) : result;
+      }
+    }
+    terminatedNode.s = TERMINATED;
+    terminatedNode.v = result;
+    return result;
+  }
+  memoized.clearCache = () => {
+    fnNode = createCacheNode();
+    memoized.resetResultsCount();
+  };
+  memoized.resultsCount = () => resultsCount;
+  memoized.resetResultsCount = () => {
+    resultsCount = 0;
+  };
+  return memoized;
+}
+
+// src/createSelectorCreator.ts
+function createSelectorCreator(memoizeOrOptions, ...memoizeOptionsFromArgs) {
+  const createSelectorCreatorOptions = typeof memoizeOrOptions === "function" ? {
+    memoize: memoizeOrOptions,
+    memoizeOptions: memoizeOptionsFromArgs
+  } : memoizeOrOptions;
+  const createSelector2 = (...createSelectorArgs) => {
+    let recomputations = 0;
+    let dependencyRecomputations = 0;
+    let lastResult;
+    let directlyPassedOptions = {};
+    let resultFunc = createSelectorArgs.pop();
+    if (typeof resultFunc === "object") {
+      directlyPassedOptions = resultFunc;
+      resultFunc = createSelectorArgs.pop();
+    }
+    assertIsFunction(
+      resultFunc,
+      `createSelector expects an output function after the inputs, but received: [${typeof resultFunc}]`
+    );
+    const combinedOptions = {
+      ...createSelectorCreatorOptions,
+      ...directlyPassedOptions
+    };
+    const {
+      memoize,
+      memoizeOptions = [],
+      argsMemoize = weakMapMemoize,
+      argsMemoizeOptions = []
+    } = combinedOptions;
+    const finalMemoizeOptions = ensureIsArray(memoizeOptions);
+    const finalArgsMemoizeOptions = ensureIsArray(argsMemoizeOptions);
+    const dependencies = getDependencies(createSelectorArgs);
+    const memoizedResultFunc = memoize(function recomputationWrapper() {
+      recomputations++;
+      return resultFunc.apply(
+        null,
+        arguments
+      );
+    }, ...finalMemoizeOptions);
+    let firstRun = true;
+    const selector = argsMemoize(function dependenciesChecker() {
+      dependencyRecomputations++;
+      const inputSelectorResults = collectInputSelectorResults(
+        dependencies,
+        arguments
+      );
+      lastResult = memoizedResultFunc.apply(null, inputSelectorResults);
+      if (process.env.NODE_ENV !== "production") {
+        const { devModeChecks = {} } = combinedOptions;
+        const { identityFunctionCheck, inputStabilityCheck } = getDevModeChecksExecutionInfo(firstRun, devModeChecks);
+        if (identityFunctionCheck.shouldRun) {
+          identityFunctionCheck.run(
+            resultFunc,
+            inputSelectorResults,
+            lastResult
+          );
+        }
+        if (inputStabilityCheck.shouldRun) {
+          const inputSelectorResultsCopy = collectInputSelectorResults(
+            dependencies,
+            arguments
+          );
+          inputStabilityCheck.run(
+            { inputSelectorResults, inputSelectorResultsCopy },
+            { memoize, memoizeOptions: finalMemoizeOptions },
+            arguments
+          );
+        }
+        if (firstRun) firstRun = false;
+      }
+      return lastResult;
+    }, ...finalArgsMemoizeOptions);
+    return Object.assign(selector, {
+      resultFunc,
+      memoizedResultFunc,
+      dependencies,
+      dependencyRecomputations: () => dependencyRecomputations,
+      resetDependencyRecomputations: () => {
+        dependencyRecomputations = 0;
+      },
+      lastResult: () => lastResult,
+      recomputations: () => recomputations,
+      resetRecomputations: () => {
+        recomputations = 0;
+      },
+      memoize,
+      argsMemoize
+    });
+  };
+  Object.assign(createSelector2, {
+    withTypes: () => createSelector2
+  });
+  return createSelector2;
+}
+var createSelector = /* @__PURE__ */ createSelectorCreator(weakMapMemoize);
 
 // src/index.ts
 function createThunkMiddleware(extraArgument) {
@@ -1074,950 +1664,6 @@ function createThunkMiddleware(extraArgument) {
 var thunk = createThunkMiddleware();
 var withExtraArgument = createThunkMiddleware;
 
-// src/index.ts
-var composeWithDevTools = typeof window !== "undefined" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : function() {
-  if (arguments.length === 0) return void 0;
-  if (typeof arguments[0] === "object") return compose;
-  return compose.apply(null, arguments);
-};
+var Ie=(...e)=>{let t=createSelectorCreator(...e),r=Object.assign((...n)=>{let a=t(...n),o=(i,...h)=>a(isDraft(i)?current(i):i,...h);return Object.assign(o,a),o},{withTypes:()=>r});return r},ye=Ie(weakMapMemoize);var Ne=typeof window<"u"&&window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__?window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__:function(){if(arguments.length!==0)return typeof arguments[0]=="object"?compose:compose.apply(null,arguments)};var Z=e=>e&&typeof e.match=="function";function P(e,t){function r(...n){if(t){let a=t(...n);if(!a)throw new Error(C(0));return {type:e,payload:a.payload,..."meta"in a&&{meta:a.meta},..."error"in a&&{error:a.error}}}return {type:e,payload:n[0]}}return r.toString=()=>`${e}`,r.type=e,r.match=n=>isAction(n)&&n.type===e,r}function he(e){return typeof e=="function"&&"type"in e&&Z(e)}function Ae(e){return isAction(e)&&Object.keys(e).every(yt)}function yt(e){return ["type","payload","error","meta"].indexOf(e)>-1}function At(e={}){return ()=>r=>n=>r(n)}var L=class e extends Array{constructor(...t){super(...t),Object.setPrototypeOf(this,e.prototype);}static get[Symbol.species](){return e}concat(...t){return super.concat.apply(this,t)}prepend(...t){return t.length===1&&Array.isArray(t[0])?new e(...t[0].concat(this)):new e(...t.concat(this))}};function Te(e){return isDraftable(e)?produce(e,()=>{}):e}function M(e,t,r){return e.has(t)?e.get(t):e.set(t,r(t)).get(t)}function Tt(e){return typeof e!="object"||e==null||Object.isFrozen(e)}function mt(e={}){return ()=>n=>a=>n(a);}function je(e){let t=typeof e;return e==null||t==="string"||t==="boolean"||t==="number"||Array.isArray(e)||isPlainObject$1(e)}function Fe(e,t="",r=je,n,a=[],o){let i;if(!r(e))return {keyPath:t||"<root>",value:e};if(typeof e!="object"||e===null||o?.has(e))return  false;let h=n!=null?n(e):Object.entries(e),s=a.length>0;for(let[c,y]of h){let A=t?t+"."+c:c;if(!(s&&a.some(f=>f instanceof RegExp?f.test(A):A===f))){if(!r(y))return {keyPath:A,value:y};if(typeof y=="object"&&(i=Fe(y,A,r,n,a,o),i))return i}}return o&&Ve(e)&&o.add(e),false}function Ve(e){if(!Object.isFrozen(e))return  false;for(let t of Object.values(e))if(!(typeof t!="object"||t===null)&&!Ve(t))return  false;return  true}function St(e={}){return ()=>t=>r=>t(r)}function xt(e){return typeof e=="boolean"}var Le=()=>function(t){let{thunk:r=true,immutableCheck:n=true,serializableCheck:a=true,actionCreatorCheck:o=true}=t??{},i=new L;return r&&(xt(r)?i.push(thunk):i.push(withExtraArgument(r.extraArgument))),i};var me="RTK_autoBatch",Ct=()=>e=>({payload:e,meta:{[me]:true}}),_e=e=>t=>{setTimeout(t,e);},Et=(e,t)=>r=>{let n=false,a=()=>{n||(n=true,cancelAnimationFrame(o),clearTimeout(i),r());},o=e(a),i=setTimeout(a,t);},Se=(e={type:"raf"})=>t=>(...r)=>{let n=t(...r),a=true,o=false,i=false,h=new Set,s=e.type==="tick"?queueMicrotask:e.type==="raf"?typeof window<"u"&&window.requestAnimationFrame?Et(window.requestAnimationFrame,100):_e(10):e.type==="callback"?e.queueNotification:_e(e.timeout),c=()=>{i=false,o&&(o=false,h.forEach(y=>y()));};return Object.assign({},n,{subscribe(y){let A=()=>a&&y(),S=n.subscribe(A);return h.add(y),()=>{S(),h.delete(y);}},dispatch(y){try{return a=!y?.meta?.[me],o=!a,o&&(i||(i=!0,s(c))),n.dispatch(y)}finally{a=true;}}})};var Ue=e=>function(r){let{autoBatch:n=true}=r??{},a=new L(e);return n&&a.push(Se(typeof n=="object"?n:void 0)),a};function Rt(e){let t=Le(),{reducer:r=void 0,middleware:n,devTools:a=true,duplicateMiddlewareCheck:o=true,preloadedState:i=void 0,enhancers:h=void 0}=e||{},s;if(typeof r=="function")s=r;else if(isPlainObject$1(r))s=combineReducers(r);else throw new Error(C(1));let c;typeof n=="function"?c=n(t):c=t();let y=compose;a&&(y=Ne({trace:false,...typeof a=="object"&&a}));let A=applyMiddleware(...c),S=Ue(A),f=typeof h=="function"?h(S):S(),d=y(...f);return createStore(s,i,d)}function ee(e){let t={},r=[],n,a={addCase(o,i){let h=typeof o=="string"?o:o.type;if(!h)throw new Error(C(28));if(h in t)throw new Error(C(29));return t[h]=i,a},addAsyncThunk(o,i){return i.pending&&(t[o.pending.type]=i.pending),i.rejected&&(t[o.rejected.type]=i.rejected),i.fulfilled&&(t[o.fulfilled.type]=i.fulfilled),i.settled&&r.push({matcher:o.settled,reducer:i.settled}),a},addMatcher(o,i){return r.push({matcher:o,reducer:i}),a},addDefaultCase(o){return n=o,a}};return e(a),[t,r,n]}function wt(e){return typeof e=="function"}function ke(e,t){let[r,n,a]=ee(t),o;if(wt(e))o=()=>Te(e());else {let h=Te(e);o=()=>h;}function i(h=o(),s){let c=[r[s.type],...n.filter(({matcher:y})=>y(s)).map(({reducer:y})=>y)];return c.filter(y=>!!y).length===0&&(c=[a]),c.reduce((y,A)=>{if(A)if(isDraft(y)){let f=A(y,s);return f===void 0?y:f}else {if(isDraftable(y))return produce(y,S=>A(S,s));{let S=A(y,s);if(S===void 0){if(y===null)return y;throw Error("A case reducer on a non-draftable value must not return undefined")}return S}}return y},h)}return i.getInitialState=o,i}var We=(e,t)=>Z(e)?e.match(t):e(t);function _(...e){return t=>e.some(r=>We(r,t))}function K(...e){return t=>e.every(r=>We(r,t))}function ne(e,t){if(!e||!e.meta)return  false;let r=typeof e.meta.requestId=="string",n=t.indexOf(e.meta.requestStatus)>-1;return r&&n}function H(e){return typeof e[0]=="function"&&"pending"in e[0]&&"fulfilled"in e[0]&&"rejected"in e[0]}function ze(...e){return e.length===0?t=>ne(t,["pending"]):H(e)?_(...e.map(t=>t.pending)):ze()(e[0])}function te(...e){return e.length===0?t=>ne(t,["rejected"]):H(e)?_(...e.map(t=>t.rejected)):te()(e[0])}function Ge(...e){let t=r=>r&&r.meta&&r.meta.rejectedWithValue;return e.length===0?K(te(...e),t):H(e)?K(te(...e),t):Ge()(e[0])}function Be(...e){return e.length===0?t=>ne(t,["fulfilled"]):H(e)?_(...e.map(t=>t.fulfilled)):Be()(e[0])}function Ke(...e){return e.length===0?t=>ne(t,["pending","fulfilled","rejected"]):H(e)?_(...e.flatMap(t=>[t.pending,t.rejected,t.fulfilled])):Ke()(e[0])}var Pt="ModuleSymbhasOwnPr-0123456789ABCDEFGHNRVfgctiUvz_KqYTJkLxpZXIjQW",D=(e=21)=>{let t="",r=e;for(;r--;)t+=Pt[Math.random()*64|0];return t};var Mt=["name","message","stack","code"],q=class{constructor(t,r){this.payload=t;this.meta=r;}payload;meta;_type},re=class{constructor(t,r){this.payload=t;this.meta=r;}payload;meta;_type},qe=e=>{if(typeof e=="object"&&e!==null){let t={};for(let r of Mt)typeof e[r]=="string"&&(t[r]=e[r]);return t}return {message:String(e)}},He="External signal was aborted",ge=(()=>{function e(t,r,n){let a=P(t+"/fulfilled",(s,c,y,A)=>({payload:s,meta:{...A||{},arg:y,requestId:c,requestStatus:"fulfilled"}})),o=P(t+"/pending",(s,c,y)=>({payload:void 0,meta:{...y||{},arg:c,requestId:s,requestStatus:"pending"}})),i=P(t+"/rejected",(s,c,y,A,S)=>({payload:A,error:(n&&n.serializeError||qe)(s||"Rejected"),meta:{...S||{},arg:y,requestId:c,rejectedWithValue:!!A,requestStatus:"rejected",aborted:s?.name==="AbortError",condition:s?.name==="ConditionError"}}));function h(s,{signal:c}={}){return (y,A,S)=>{let f=n?.idGenerator?n.idGenerator(s):D(),d=new AbortController,l,u;function p(T){u=T,d.abort();}c&&(c.aborted?p(He):c.addEventListener("abort",()=>p(He),{once:true}));let g=(async function(){let T;try{let k=n?.condition?.(s,{getState:A,extra:S});if(bt(k)&&(k=await k),k===!1||d.signal.aborted)throw {name:"ConditionError",message:"Aborted due to condition callback returning false."};let R=new Promise((x,E)=>{l=()=>{E({name:"AbortError",message:u||"Aborted"});},d.signal.addEventListener("abort",l,{once:!0});});y(o(f,s,n?.getPendingMeta?.({requestId:f,arg:s},{getState:A,extra:S}))),T=await Promise.race([R,Promise.resolve(r(s,{dispatch:y,getState:A,extra:S,requestId:f,signal:d.signal,abort:p,rejectWithValue:((x,E)=>new q(x,E)),fulfillWithValue:((x,E)=>new re(x,E))})).then(x=>{if(x instanceof q)throw x;return x instanceof re?a(x.payload,f,s,x.meta):a(x,f,s)})]);}catch(k){T=k instanceof q?i(null,f,s,k.payload,k.meta):i(k,f,s);}finally{l&&d.signal.removeEventListener("abort",l);}return n&&!n.dispatchConditionRejection&&i.match(T)&&T.meta.condition||y(T),T})();return Object.assign(g,{abort:p,requestId:f,arg:s,unwrap(){return g.then($e)}})}}return Object.assign(h,{pending:o,rejected:i,fulfilled:a,settled:_(i,a),typePrefix:t})}return e.withTypes=()=>e,e})();function $e(e){if(e.meta&&e.meta.rejectedWithValue)throw e.payload;if(e.error)throw e.error;return e.payload}function bt(e){return e!==null&&typeof e=="object"&&typeof e.then=="function"}var Xe=Symbol.for("rtk-slice-createasyncthunk"),It={[Xe]:ge},Je=(n=>(n.reducer="reducer",n.reducerWithPrepare="reducerWithPrepare",n.asyncThunk="asyncThunk",n))(Je||{});function vt(e,t){return `${e}/${t}`}function Qe({creators:e}={}){let t=e?.asyncThunk?.[Xe];return function(n){let{name:a,reducerPath:o=a}=n;if(!a)throw new Error(C(11));let i=(typeof n.reducers=="function"?n.reducers(Nt()):n.reducers)||{},h=Object.keys(i),s={sliceCaseReducersByName:{},sliceCaseReducersByType:{},actionCreators:{},sliceMatchers:[]},c={addCase(T,m){let k=typeof T=="string"?T:T.type;if(!k)throw new Error(C(12));if(k in s.sliceCaseReducersByType)throw new Error(C(13));return s.sliceCaseReducersByType[k]=m,c},addMatcher(T,m){return s.sliceMatchers.push({matcher:T,reducer:m}),c},exposeAction(T,m){return s.actionCreators[T]=m,c},exposeCaseReducer(T,m){return s.sliceCaseReducersByName[T]=m,c}};h.forEach(T=>{let m=i[T],k={reducerName:T,type:vt(a,T),createNotation:typeof n.reducers=="function"};Ft(m)?Lt(k,m,c,t):jt(k,m,c);});function y(){let[T={},m=[],k=void 0]=typeof n.extraReducers=="function"?ee(n.extraReducers):[n.extraReducers],R={...T,...s.sliceCaseReducersByType};return ke(n.initialState,x=>{for(let E in R)x.addCase(E,R[E]);for(let E of s.sliceMatchers)x.addMatcher(E.matcher,E.reducer);for(let E of m)x.addMatcher(E.matcher,E.reducer);k&&x.addDefaultCase(k);})}let A=T=>T,S=new Map,f=new WeakMap,d;function l(T,m){return d||(d=y()),d(T,m)}function u(){return d||(d=y()),d.getInitialState()}function p(T,m=false){function k(x){let E=x[T];return typeof E>"u"&&m&&(E=M(f,k,u)),E}function R(x=A){let E=M(S,m,()=>new WeakMap);return M(E,x,()=>{let z={};for(let[J,j]of Object.entries(n.selectors??{}))z[J]=Dt(j,x,()=>M(f,x,u),m);return z})}return {reducerPath:T,getSelectors:R,get selectors(){return R(k)},selectSlice:k}}let g={name:a,reducer:l,actions:s.actionCreators,caseReducers:s.sliceCaseReducersByName,getInitialState:u,...p(o),injectInto(T,{reducerPath:m,...k}={}){let R=m??o;return T.inject({reducerPath:R,reducer:l},k),{...g,...p(R,true)}}};return g}}function Dt(e,t,r,n){function a(o,...i){let h=t(o);return typeof h>"u"&&n&&(h=r()),e(h,...i)}return a.unwrapped=e,a}var Ot=Qe();function Nt(){function e(t,r){return {_reducerDefinitionType:"asyncThunk",payloadCreator:t,...r}}return e.withTypes=()=>e,{reducer(t){return Object.assign({[t.name](...r){return t(...r)}}[t.name],{_reducerDefinitionType:"reducer"})},preparedReducer(t,r){return {_reducerDefinitionType:"reducerWithPrepare",prepare:t,reducer:r}},asyncThunk:e}}function jt({type:e,reducerName:t,createNotation:r},n,a){let o,i;if("reducer"in n){if(r&&!Vt(n))throw new Error(C(17));o=n.reducer,i=n.prepare;}else o=n;a.addCase(e,o).exposeCaseReducer(t,o).exposeAction(t,i?P(e,i):P(e));}function Ft(e){return e._reducerDefinitionType==="asyncThunk"}function Vt(e){return e._reducerDefinitionType==="reducerWithPrepare"}function Lt({type:e,reducerName:t},r,n,a){if(!a)throw new Error(C(18));let{payloadCreator:o,fulfilled:i,pending:h,rejected:s,settled:c,options:y}=r,A=a(e,o,y);n.exposeAction(t,A),i&&n.addCase(A.fulfilled,i),h&&n.addCase(A.pending,h),s&&n.addCase(A.rejected,s),c&&n.addMatcher(A.settled,c),n.exposeCaseReducer(t,{fulfilled:i||ae,pending:h||ae,rejected:s||ae,settled:c||ae});}function ae(){}function _t(){return {ids:[],entities:{}}}function Ye(e){function t(r={},n){let a=Object.assign(_t(),r);return n?e.setAll(a,n):a}return {getInitialState:t}}function Ze(){function e(t,r={}){let{createSelector:n=ye}=r,a=A=>A.ids,o=A=>A.entities,i=n(a,o,(A,S)=>A.map(f=>S[f])),h=(A,S)=>S,s=(A,S)=>A[S],c=n(a,A=>A.length);if(!t)return {selectIds:a,selectEntities:o,selectAll:i,selectTotal:c,selectById:n(o,h,s)};let y=n(t,o);return {selectIds:n(t,a),selectEntities:y,selectAll:n(t,i),selectTotal:n(t,c),selectById:n(y,h,s)}}return {getSelectors:e}}var Ut=isDraft;function et(e){let t=w((r,n)=>e(n));return function(n){return t(n,void 0)}}function w(e){return function(r,n){function a(i){return Ae(i)}let o=i=>{a(n)?e(n.payload,i):e(n,i);};return Ut(r)?(o(r),r):produce(r,o)}}function O(e,t){return t(e)}function b(e){return Array.isArray(e)||(e=Object.values(e)),e}function $(e){return isDraft(e)?current(e):e}function oe(e,t,r){e=b(e);let n=$(r.ids),a=new Set(n),o=[],i=new Set([]),h=[];for(let s of e){let c=O(s,t);a.has(c)||i.has(c)?h.push({id:c,changes:s}):(i.add(c),o.push(s));}return [o,h,n]}function ie(e){function t(d,l){let u=O(d,e);u in l.entities||(l.ids.push(u),l.entities[u]=d);}function r(d,l){d=b(d);for(let u of d)t(u,l);}function n(d,l){let u=O(d,e);u in l.entities||l.ids.push(u),l.entities[u]=d;}function a(d,l){d=b(d);for(let u of d)n(u,l);}function o(d,l){d=b(d),l.ids=[],l.entities={},r(d,l);}function i(d,l){return h([d],l)}function h(d,l){let u=false;d.forEach(p=>{p in l.entities&&(delete l.entities[p],u=true);}),u&&(l.ids=l.ids.filter(p=>p in l.entities));}function s(d){Object.assign(d,{ids:[],entities:{}});}function c(d,l,u){let p=u.entities[l.id];if(p===void 0)return  false;let g=Object.assign({},p,l.changes),T=O(g,e),m=T!==l.id;return m&&(d[l.id]=T,delete u.entities[l.id]),u.entities[T]=g,m}function y(d,l){return A([d],l)}function A(d,l){let u={},p={};d.forEach(T=>{T.id in l.entities&&(p[T.id]={id:T.id,changes:{...p[T.id]?.changes,...T.changes}});}),d=Object.values(p),d.length>0&&d.filter(m=>c(u,m,l)).length>0&&(l.ids=Object.values(l.entities).map(m=>O(m,e)));}function S(d,l){return f([d],l)}function f(d,l){let[u,p]=oe(d,e,l);r(u,l),A(p,l);}return {removeAll:et(s),addOne:w(t),addMany:w(r),setOne:w(n),setMany:w(a),setAll:w(o),updateOne:w(y),updateMany:w(A),upsertOne:w(S),upsertMany:w(f),removeOne:w(i),removeMany:w(h)}}function Wt(e,t,r){let n=0,a=e.length;for(;n<a;){let o=n+a>>>1,i=e[o];r(t,i)>=0?n=o+1:a=o;}return n}function zt(e,t,r){let n=Wt(e,t,r);return e.splice(n,0,t),e}function tt(e,t){let{removeOne:r,removeMany:n,removeAll:a}=ie(e);function o(u,p){return i([u],p)}function i(u,p,g){u=b(u);let T=new Set(g??$(p.ids)),m=new Set,k=u.filter(R=>{let x=O(R,e),E=!m.has(x);return E&&m.add(x),!T.has(x)&&E});k.length!==0&&l(p,k);}function h(u,p){return s([u],p)}function s(u,p){let g={};if(u=b(u),u.length!==0){for(let T of u){let m=e(T);g[m]=T,delete p.entities[m];}u=b(g),l(p,u);}}function c(u,p){u=b(u),p.entities={},p.ids=[],i(u,p,[]);}function y(u,p){return A([u],p)}function A(u,p){let g=false,T=false;for(let m of u){let k=p.entities[m.id];if(!k)continue;g=true,Object.assign(k,m.changes);let R=e(k);if(m.id!==R){T=true,delete p.entities[m.id];let x=p.ids.indexOf(m.id);p.ids[x]=R,p.entities[R]=k;}}g&&l(p,[],g,T);}function S(u,p){return f([u],p)}function f(u,p){let[g,T,m]=oe(u,e,p);g.length&&i(g,p,m),T.length&&A(T,p);}function d(u,p){if(u.length!==p.length)return  false;for(let g=0;g<u.length;g++)if(u[g]!==p[g])return  false;return  true}let l=(u,p,g,T)=>{let m=$(u.entities),k=$(u.ids),R=u.entities,x=k;T&&(x=new Set(k));let E=[];for(let j of x){let be=m[j];be&&E.push(be);}let z=E.length===0;for(let j of p)R[e(j)]=j,z||zt(E,j,t);z?E=p.slice().sort(t):g&&E.sort(t);let J=E.map(e);d(k,J)||(u.ids=J);};return {removeOne:r,removeMany:n,removeAll:a,addOne:w(o),updateOne:w(y),upsertOne:w(S),setOne:w(h),setMany:w(s),setAll:w(c),addMany:w(i),updateMany:w(A),upsertMany:w(f)}}function Gt(e={}){let{selectId:t,sortComparer:r}={sortComparer:false,selectId:i=>i.id,...e},n=r?tt(t,r):ie(t),a=Ye(n),o=Ze();return {selectId:t,sortComparer:r,...a,...o,...n}}var Bt="task",nt="listener",rt="completed",xe="cancelled",at=`task-${xe}`,ot=`task-${rt}`,se=`${nt}-${xe}`,it=`${nt}-${rt}`,I=class{constructor(t){this.code=t;this.message=`${Bt} ${xe} (reason: ${t})`;}code;name="TaskAbortError";message};var ce=(e,t)=>{if(typeof e!="function")throw new TypeError(C(32))},U=()=>{},de=(e,t=U)=>(e.catch(t),e),ue=(e,t)=>(e.addEventListener("abort",t,{once:true}),()=>e.removeEventListener("abort",t));var N=e=>{if(e.aborted)throw new I(e.reason)};function Ce(e,t){let r=U;return new Promise((n,a)=>{let o=()=>a(new I(e.reason));if(e.aborted){o();return}r=ue(e,o),t.finally(()=>r()).then(n,a);}).finally(()=>{r=U;})}var st=async(e,t)=>{try{return await Promise.resolve(),{status:"ok",value:await e()}}catch(r){return {status:r instanceof I?"cancelled":"rejected",error:r}}finally{t?.();}},X=e=>t=>de(Ce(e,t).then(r=>(N(e),r))),Ee=e=>{let t=X(e);return r=>t(new Promise(n=>setTimeout(n,r)))};var {assign:W}=Object,ct={},le="listenerMiddleware",Kt=(e,t)=>{let r=n=>ue(e,()=>n.abort(e.reason));return (n,a)=>{ce(n);let o=new AbortController;r(o);let i=st(async()=>{N(e),N(o.signal);let h=await n({pause:X(o.signal),delay:Ee(o.signal),signal:o.signal});return N(o.signal),h},()=>o.abort(ot));return a?.autoJoin&&t.push(i.catch(U)),{result:X(e)(i),cancel(){o.abort(at);}}}},Ht=(e,t)=>{let r=async(n,a)=>{N(t);let o=()=>{},h=[new Promise((s,c)=>{let y=e({predicate:n,effect:(A,S)=>{S.unsubscribe(),s([A,S.getState(),S.getOriginalState()]);}});o=()=>{y(),c();};})];a!=null&&h.push(new Promise(s=>setTimeout(s,a,null)));try{let s=await Ce(t,Promise.race(h));return N(t),s}finally{o();}};return((n,a)=>de(r(n,a)))},lt=e=>{let{type:t,actionCreator:r,matcher:n,predicate:a,effect:o}=e;if(t)a=P(t).match;else if(r)t=r.type,a=r.match;else if(n)a=n;else if(!a)throw new Error(C(21));return ce(o),{predicate:a,type:t,effect:o}},pt=W(e=>{let{type:t,predicate:r,effect:n}=lt(e);return {id:D(),effect:n,type:t,predicate:r,pending:new Set,unsubscribe:()=>{throw new Error(C(22))}}},{withTypes:()=>pt}),dt=(e,t)=>{let{type:r,effect:n,predicate:a}=lt(t);return Array.from(e.values()).find(o=>(typeof r=="string"?o.type===r:o.predicate===a)&&o.effect===n)},Re=e=>{e.pending.forEach(t=>{t.abort(se);});},qt=(e,t)=>()=>{for(let r of t.keys())Re(r);e.clear();},ut=(e,t,r)=>{try{e(t,r);}catch(n){setTimeout(()=>{throw n},0);}},we=W(P(`${le}/add`),{withTypes:()=>we}),ft=P(`${le}/removeAll`),Pe=W(P(`${le}/remove`),{withTypes:()=>Pe}),$t=(...e)=>{console.error(`${le}/error`,...e);},Xt=(e={})=>{let t=new Map,r=new Map,n=f=>{let d=r.get(f)??0;r.set(f,d+1);},a=f=>{let d=r.get(f)??1;d===1?r.delete(f):r.set(f,d-1);},{extra:o,onError:i=$t}=e;ce(i);let h=f=>(f.unsubscribe=()=>t.delete(f.id),t.set(f.id,f),d=>{f.unsubscribe(),d?.cancelActive&&Re(f);}),s=(f=>{let d=dt(t,f)??pt(f);return h(d)});W(s,{withTypes:()=>s});let c=f=>{let d=dt(t,f);return d&&(d.unsubscribe(),f.cancelActive&&Re(d)),!!d};W(c,{withTypes:()=>c});let y=async(f,d,l,u)=>{let p=new AbortController,g=Ht(s,p.signal),T=[];try{f.pending.add(p),n(f),await Promise.resolve(f.effect(d,W({},l,{getOriginalState:u,condition:(m,k)=>g(m,k).then(Boolean),take:g,delay:Ee(p.signal),pause:X(p.signal),extra:o,signal:p.signal,fork:Kt(p.signal,T),unsubscribe:f.unsubscribe,subscribe:()=>{t.set(f.id,f);},cancelActiveListeners:()=>{f.pending.forEach((m,k,R)=>{m!==p&&(m.abort(se),R.delete(m));});},cancel:()=>{p.abort(se),f.pending.delete(p);},throwIfCancelled:()=>{N(p.signal);}})));}catch(m){m instanceof I||ut(i,m,{raisedBy:"effect"});}finally{await Promise.all(T),p.abort(it),a(f),f.pending.delete(p);}},A=qt(t,r);return {middleware:f=>d=>l=>{if(!isAction(l))return d(l);if(we.match(l))return s(l.payload);if(ft.match(l)){A();return}if(Pe.match(l))return c(l.payload);let u=f.getState(),p=()=>{if(u===ct)throw new Error(C(23));return u},g;try{if(g=d(l),t.size>0){let T=f.getState(),m=Array.from(t.values());for(let k of m){let R=!1;try{R=k.predicate(l,T,u);}catch(x){R=!1,ut(i,x,{raisedBy:"predicate"});}R&&y(k,l,f,p);}}}finally{u=ct;}return g},startListening:s,stopListening:c,clearListeners:A}};var Jt=e=>({middleware:e,applied:new Map}),Qt=e=>t=>t?.meta?.instanceId===e,Yt=()=>{let e=D(),t=new Map,r=Object.assign(P("dynamicMiddleware/add",(...h)=>({payload:h,meta:{instanceId:e}})),{withTypes:()=>r}),n=Object.assign(function(...s){s.forEach(c=>{M(t,c,Jt);});},{withTypes:()=>n}),a=h=>{let s=Array.from(t.values()).map(c=>M(c.applied,h,c.middleware));return compose(...s)},o=K(r,Qt(e));return {middleware:h=>s=>c=>o(c)?(n(...c.payload),h.dispatch):a(h)(s)(c),addMiddleware:n,withMiddleware:r,instanceId:e}};var en=e=>"reducerPath"in e&&typeof e.reducerPath=="string",tn=e=>e.flatMap(t=>en(t)?[[t.reducerPath,t.reducer]]:Object.entries(t)),Me=Symbol.for("rtk-state-proxy-original"),nn=e=>!!e&&!!e[Me],rn=new WeakMap,an=(e,t,r)=>M(rn,e,()=>new Proxy(e,{get:(n,a,o)=>{if(a===Me)return n;let i=Reflect.get(n,a,o);if(typeof i>"u"){let h=r[a];if(typeof h<"u")return h;let s=t[a];if(s){let c=s(void 0,{type:D()});if(typeof c>"u")throw new Error(C(24));return r[a]=c,c}}return i}})),on=e=>{if(!nn(e))throw new Error(C(25));return e[Me]},sn={},cn=(e=sn)=>e;function dn(...e){let t=Object.fromEntries(tn(e)),r=()=>Object.keys(t).length?combineReducers(t):cn,n=r();function a(s,c){return n(s,c)}a.withLazyLoadedSlices=()=>a;let o={},i=(s,c={})=>{let{reducerPath:y,reducer:A}=s,S=t[y];return !c.overrideExisting&&S&&S!==A||(c.overrideExisting&&S!==A&&delete o[y],t[y]=A,n=r()),a},h=Object.assign(function(c,y){return function(S,...f){return c(an(y?y(S,...f):S,t,o),...f)}},{original:on});return Object.assign(a,{inject:i,selector:h})}function C(e){return `Minified Redux Toolkit error #${e}; visit https://redux-toolkit.js.org/Errors?code=${e} for the full message or use the non-minified dev environment for full errors. `}
 
-// src/tsHelpers.ts
-var hasMatchFunction = (v) => {
-  return v && typeof v.match === "function";
-};
-
-// src/createAction.ts
-function createAction(type, prepareAction) {
-  function actionCreator(...args) {
-    if (prepareAction) {
-      let prepared = prepareAction(...args);
-      if (!prepared) {
-        throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(0) : "prepareAction did not return an object");
-      }
-      return {
-        type,
-        payload: prepared.payload,
-        ..."meta" in prepared && {
-          meta: prepared.meta
-        },
-        ..."error" in prepared && {
-          error: prepared.error
-        }
-      };
-    }
-    return {
-      type,
-      payload: args[0]
-    };
-  }
-  actionCreator.toString = () => `${type}`;
-  actionCreator.type = type;
-  actionCreator.match = (action) => isAction(action) && action.type === type;
-  return actionCreator;
-}
-function isActionCreator(action) {
-  return typeof action === "function" && "type" in action && // hasMatchFunction only wants Matchers but I don't see the point in rewriting it
-  hasMatchFunction(action);
-}
-
-// src/actionCreatorInvariantMiddleware.ts
-function getMessage(type) {
-  const splitType = type ? `${type}`.split("/") : [];
-  const actionName = splitType[splitType.length - 1] || "actionCreator";
-  return `Detected an action creator with type "${type || "unknown"}" being dispatched. 
-Make sure you're calling the action creator before dispatching, i.e. \`dispatch(${actionName}())\` instead of \`dispatch(${actionName})\`. This is necessary even if the action has no payload.`;
-}
-function createActionCreatorInvariantMiddleware(options = {}) {
-  if (process.env.NODE_ENV === "production") {
-    return () => (next) => (action) => next(action);
-  }
-  const {
-    isActionCreator: isActionCreator2 = isActionCreator
-  } = options;
-  return () => (next) => (action) => {
-    if (isActionCreator2(action)) {
-      console.warn(getMessage(action.type));
-    }
-    return next(action);
-  };
-}
-function getTimeMeasureUtils(maxDelay, fnName) {
-  let elapsed = 0;
-  return {
-    measureTime(fn) {
-      const started = Date.now();
-      try {
-        return fn();
-      } finally {
-        const finished = Date.now();
-        elapsed += finished - started;
-      }
-    },
-    warnIfExceeded() {
-      if (elapsed > maxDelay) {
-        console.warn(`${fnName} took ${elapsed}ms, which is more than the warning threshold of ${maxDelay}ms. 
-If your state or actions are very large, you may want to disable the middleware as it might cause too much of a slowdown in development mode. See https://redux-toolkit.js.org/api/getDefaultMiddleware for instructions.
-It is disabled in production builds, so you don't need to worry about that.`);
-      }
-    }
-  };
-}
-var Tuple = class _Tuple extends Array {
-  constructor(...items) {
-    super(...items);
-    Object.setPrototypeOf(this, _Tuple.prototype);
-  }
-  static get [Symbol.species]() {
-    return _Tuple;
-  }
-  concat(...arr) {
-    return super.concat.apply(this, arr);
-  }
-  prepend(...arr) {
-    if (arr.length === 1 && Array.isArray(arr[0])) {
-      return new _Tuple(...arr[0].concat(this));
-    }
-    return new _Tuple(...arr.concat(this));
-  }
-};
-function freezeDraftable(val) {
-  return isDraftable(val) ? produce(val, () => {
-  }) : val;
-}
-function getOrInsertComputed(map, key, compute) {
-  if (map.has(key)) return map.get(key);
-  return map.set(key, compute(key)).get(key);
-}
-
-// src/immutableStateInvariantMiddleware.ts
-function isImmutableDefault(value) {
-  return typeof value !== "object" || value == null || Object.isFrozen(value);
-}
-function trackForMutations(isImmutable, ignorePaths, obj) {
-  const trackedProperties = trackProperties(isImmutable, ignorePaths, obj);
-  return {
-    detectMutations() {
-      return detectMutations(isImmutable, ignorePaths, trackedProperties, obj);
-    }
-  };
-}
-function trackProperties(isImmutable, ignorePaths = [], obj, path = "", checkedObjects = /* @__PURE__ */ new Set()) {
-  const tracked = {
-    value: obj
-  };
-  if (!isImmutable(obj) && !checkedObjects.has(obj)) {
-    checkedObjects.add(obj);
-    tracked.children = {};
-    for (const key in obj) {
-      const childPath = path ? path + "." + key : key;
-      if (ignorePaths.length && ignorePaths.indexOf(childPath) !== -1) {
-        continue;
-      }
-      tracked.children[key] = trackProperties(isImmutable, ignorePaths, obj[key], childPath);
-    }
-  }
-  return tracked;
-}
-function detectMutations(isImmutable, ignoredPaths = [], trackedProperty, obj, sameParentRef = false, path = "") {
-  const prevObj = trackedProperty ? trackedProperty.value : void 0;
-  const sameRef = prevObj === obj;
-  if (sameParentRef && !sameRef && !Number.isNaN(obj)) {
-    return {
-      wasMutated: true,
-      path
-    };
-  }
-  if (isImmutable(prevObj) || isImmutable(obj)) {
-    return {
-      wasMutated: false
-    };
-  }
-  const keysToDetect = {};
-  for (let key in trackedProperty.children) {
-    keysToDetect[key] = true;
-  }
-  for (let key in obj) {
-    keysToDetect[key] = true;
-  }
-  const hasIgnoredPaths = ignoredPaths.length > 0;
-  for (let key in keysToDetect) {
-    const nestedPath = path ? path + "." + key : key;
-    if (hasIgnoredPaths) {
-      const hasMatches = ignoredPaths.some((ignored) => {
-        if (ignored instanceof RegExp) {
-          return ignored.test(nestedPath);
-        }
-        return nestedPath === ignored;
-      });
-      if (hasMatches) {
-        continue;
-      }
-    }
-    const result = detectMutations(isImmutable, ignoredPaths, trackedProperty.children[key], obj[key], sameRef, nestedPath);
-    if (result.wasMutated) {
-      return result;
-    }
-  }
-  return {
-    wasMutated: false
-  };
-}
-function createImmutableStateInvariantMiddleware(options = {}) {
-  if (process.env.NODE_ENV === "production") {
-    return () => (next) => (action) => next(action);
-  } else {
-    let stringify2 = function(obj, serializer, indent, decycler) {
-      return JSON.stringify(obj, getSerialize2(serializer, decycler), indent);
-    }, getSerialize2 = function(serializer, decycler) {
-      let stack = [], keys = [];
-      if (!decycler) decycler = function(_, value) {
-        if (stack[0] === value) return "[Circular ~]";
-        return "[Circular ~." + keys.slice(0, stack.indexOf(value)).join(".") + "]";
-      };
-      return function(key, value) {
-        if (stack.length > 0) {
-          var thisPos = stack.indexOf(this);
-          ~thisPos ? stack.splice(thisPos + 1) : stack.push(this);
-          ~thisPos ? keys.splice(thisPos, Infinity, key) : keys.push(key);
-          if (~stack.indexOf(value)) value = decycler.call(this, key, value);
-        } else stack.push(value);
-        return serializer == null ? value : serializer.call(this, key, value);
-      };
-    };
-    let {
-      isImmutable = isImmutableDefault,
-      ignoredPaths,
-      warnAfter = 32
-    } = options;
-    const track = trackForMutations.bind(null, isImmutable, ignoredPaths);
-    return ({
-      getState
-    }) => {
-      let state = getState();
-      let tracker = track(state);
-      let result;
-      return (next) => (action) => {
-        const measureUtils = getTimeMeasureUtils(warnAfter, "ImmutableStateInvariantMiddleware");
-        measureUtils.measureTime(() => {
-          state = getState();
-          result = tracker.detectMutations();
-          tracker = track(state);
-          if (result.wasMutated) {
-            throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(19) : `A state mutation was detected between dispatches, in the path '${result.path || ""}'.  This may cause incorrect behavior. (https://redux.js.org/style-guide/style-guide#do-not-mutate-state)`);
-          }
-        });
-        const dispatchedAction = next(action);
-        measureUtils.measureTime(() => {
-          state = getState();
-          result = tracker.detectMutations();
-          tracker = track(state);
-          if (result.wasMutated) {
-            throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(20) : `A state mutation was detected inside a dispatch, in the path: ${result.path || ""}. Take a look at the reducer(s) handling the action ${stringify2(action)}. (https://redux.js.org/style-guide/style-guide#do-not-mutate-state)`);
-          }
-        });
-        measureUtils.warnIfExceeded();
-        return dispatchedAction;
-      };
-    };
-  }
-}
-function isPlain(val) {
-  const type = typeof val;
-  return val == null || type === "string" || type === "boolean" || type === "number" || Array.isArray(val) || isPlainObject$1(val);
-}
-function findNonSerializableValue(value, path = "", isSerializable = isPlain, getEntries, ignoredPaths = [], cache) {
-  let foundNestedSerializable;
-  if (!isSerializable(value)) {
-    return {
-      keyPath: path || "<root>",
-      value
-    };
-  }
-  if (typeof value !== "object" || value === null) {
-    return false;
-  }
-  if (cache?.has(value)) return false;
-  const entries = getEntries != null ? getEntries(value) : Object.entries(value);
-  const hasIgnoredPaths = ignoredPaths.length > 0;
-  for (const [key, nestedValue] of entries) {
-    const nestedPath = path ? path + "." + key : key;
-    if (hasIgnoredPaths) {
-      const hasMatches = ignoredPaths.some((ignored) => {
-        if (ignored instanceof RegExp) {
-          return ignored.test(nestedPath);
-        }
-        return nestedPath === ignored;
-      });
-      if (hasMatches) {
-        continue;
-      }
-    }
-    if (!isSerializable(nestedValue)) {
-      return {
-        keyPath: nestedPath,
-        value: nestedValue
-      };
-    }
-    if (typeof nestedValue === "object") {
-      foundNestedSerializable = findNonSerializableValue(nestedValue, nestedPath, isSerializable, getEntries, ignoredPaths, cache);
-      if (foundNestedSerializable) {
-        return foundNestedSerializable;
-      }
-    }
-  }
-  if (cache && isNestedFrozen(value)) cache.add(value);
-  return false;
-}
-function isNestedFrozen(value) {
-  if (!Object.isFrozen(value)) return false;
-  for (const nestedValue of Object.values(value)) {
-    if (typeof nestedValue !== "object" || nestedValue === null) continue;
-    if (!isNestedFrozen(nestedValue)) return false;
-  }
-  return true;
-}
-function createSerializableStateInvariantMiddleware(options = {}) {
-  if (process.env.NODE_ENV === "production") {
-    return () => (next) => (action) => next(action);
-  } else {
-    const {
-      isSerializable = isPlain,
-      getEntries,
-      ignoredActions = [],
-      ignoredActionPaths = ["meta.arg", "meta.baseQueryMeta"],
-      ignoredPaths = [],
-      warnAfter = 32,
-      ignoreState = false,
-      ignoreActions = false,
-      disableCache = false
-    } = options;
-    const cache = !disableCache && WeakSet ? /* @__PURE__ */ new WeakSet() : void 0;
-    return (storeAPI) => (next) => (action) => {
-      if (!isAction(action)) {
-        return next(action);
-      }
-      const result = next(action);
-      const measureUtils = getTimeMeasureUtils(warnAfter, "SerializableStateInvariantMiddleware");
-      if (!ignoreActions && !(ignoredActions.length && ignoredActions.indexOf(action.type) !== -1)) {
-        measureUtils.measureTime(() => {
-          const foundActionNonSerializableValue = findNonSerializableValue(action, "", isSerializable, getEntries, ignoredActionPaths, cache);
-          if (foundActionNonSerializableValue) {
-            const {
-              keyPath,
-              value
-            } = foundActionNonSerializableValue;
-            console.error(`A non-serializable value was detected in an action, in the path: \`${keyPath}\`. Value:`, value, "\nTake a look at the logic that dispatched this action: ", action, "\n(See https://redux.js.org/faq/actions#why-should-type-be-a-string-or-at-least-serializable-why-should-my-action-types-be-constants)", "\n(To allow non-serializable values see: https://redux-toolkit.js.org/usage/usage-guide#working-with-non-serializable-data)");
-          }
-        });
-      }
-      if (!ignoreState) {
-        measureUtils.measureTime(() => {
-          const state = storeAPI.getState();
-          const foundStateNonSerializableValue = findNonSerializableValue(state, "", isSerializable, getEntries, ignoredPaths, cache);
-          if (foundStateNonSerializableValue) {
-            const {
-              keyPath,
-              value
-            } = foundStateNonSerializableValue;
-            console.error(`A non-serializable value was detected in the state, in the path: \`${keyPath}\`. Value:`, value, `
-Take a look at the reducer(s) handling this action type: ${action.type}.
-(See https://redux.js.org/faq/organizing-state#can-i-put-functions-promises-or-other-non-serializable-items-in-my-store-state)`);
-          }
-        });
-        measureUtils.warnIfExceeded();
-      }
-      return result;
-    };
-  }
-}
-
-// src/getDefaultMiddleware.ts
-function isBoolean(x) {
-  return typeof x === "boolean";
-}
-var buildGetDefaultMiddleware = () => function getDefaultMiddleware(options) {
-  const {
-    thunk: thunk$1 = true,
-    immutableCheck = true,
-    serializableCheck = true,
-    actionCreatorCheck = true
-  } = options ?? {};
-  let middlewareArray = new Tuple();
-  if (thunk$1) {
-    if (isBoolean(thunk$1)) {
-      middlewareArray.push(thunk);
-    } else {
-      middlewareArray.push(withExtraArgument(thunk$1.extraArgument));
-    }
-  }
-  if (process.env.NODE_ENV !== "production") {
-    if (immutableCheck) {
-      let immutableOptions = {};
-      if (!isBoolean(immutableCheck)) {
-        immutableOptions = immutableCheck;
-      }
-      middlewareArray.unshift(createImmutableStateInvariantMiddleware(immutableOptions));
-    }
-    if (serializableCheck) {
-      let serializableOptions = {};
-      if (!isBoolean(serializableCheck)) {
-        serializableOptions = serializableCheck;
-      }
-      middlewareArray.push(createSerializableStateInvariantMiddleware(serializableOptions));
-    }
-    if (actionCreatorCheck) {
-      let actionCreatorOptions = {};
-      if (!isBoolean(actionCreatorCheck)) {
-        actionCreatorOptions = actionCreatorCheck;
-      }
-      middlewareArray.unshift(createActionCreatorInvariantMiddleware(actionCreatorOptions));
-    }
-  }
-  return middlewareArray;
-};
-
-// src/autoBatchEnhancer.ts
-var SHOULD_AUTOBATCH = "RTK_autoBatch";
-var createQueueWithTimer = (timeout) => {
-  return (notify) => {
-    setTimeout(notify, timeout);
-  };
-};
-var autoBatchEnhancer = (options = {
-  type: "raf"
-}) => (next) => (...args) => {
-  const store = next(...args);
-  let notifying = true;
-  let shouldNotifyAtEndOfTick = false;
-  let notificationQueued = false;
-  const listeners = /* @__PURE__ */ new Set();
-  const queueCallback = options.type === "tick" ? queueMicrotask : options.type === "raf" ? (
-    // requestAnimationFrame won't exist in SSR environments. Fall back to a vague approximation just to keep from erroring.
-    typeof window !== "undefined" && window.requestAnimationFrame ? window.requestAnimationFrame : createQueueWithTimer(10)
-  ) : options.type === "callback" ? options.queueNotification : createQueueWithTimer(options.timeout);
-  const notifyListeners = () => {
-    notificationQueued = false;
-    if (shouldNotifyAtEndOfTick) {
-      shouldNotifyAtEndOfTick = false;
-      listeners.forEach((l) => l());
-    }
-  };
-  return Object.assign({}, store, {
-    // Override the base `store.subscribe` method to keep original listeners
-    // from running if we're delaying notifications
-    subscribe(listener2) {
-      const wrappedListener = () => notifying && listener2();
-      const unsubscribe = store.subscribe(wrappedListener);
-      listeners.add(listener2);
-      return () => {
-        unsubscribe();
-        listeners.delete(listener2);
-      };
-    },
-    // Override the base `store.dispatch` method so that we can check actions
-    // for the `shouldAutoBatch` flag and determine if batching is active
-    dispatch(action) {
-      try {
-        notifying = !action?.meta?.[SHOULD_AUTOBATCH];
-        shouldNotifyAtEndOfTick = !notifying;
-        if (shouldNotifyAtEndOfTick) {
-          if (!notificationQueued) {
-            notificationQueued = true;
-            queueCallback(notifyListeners);
-          }
-        }
-        return store.dispatch(action);
-      } finally {
-        notifying = true;
-      }
-    }
-  });
-};
-
-// src/getDefaultEnhancers.ts
-var buildGetDefaultEnhancers = (middlewareEnhancer) => function getDefaultEnhancers(options) {
-  const {
-    autoBatch = true
-  } = options ?? {};
-  let enhancerArray = new Tuple(middlewareEnhancer);
-  if (autoBatch) {
-    enhancerArray.push(autoBatchEnhancer(typeof autoBatch === "object" ? autoBatch : void 0));
-  }
-  return enhancerArray;
-};
-
-// src/configureStore.ts
-function configureStore(options) {
-  const getDefaultMiddleware = buildGetDefaultMiddleware();
-  const {
-    reducer = void 0,
-    middleware,
-    devTools = true,
-    duplicateMiddlewareCheck = true,
-    preloadedState = void 0,
-    enhancers = void 0
-  } = options || {};
-  let rootReducer;
-  if (typeof reducer === "function") {
-    rootReducer = reducer;
-  } else if (isPlainObject$1(reducer)) {
-    rootReducer = combineReducers(reducer);
-  } else {
-    throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(1) : "`reducer` is a required argument, and must be a function or an object of functions that can be passed to combineReducers");
-  }
-  if (process.env.NODE_ENV !== "production" && middleware && typeof middleware !== "function") {
-    throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(2) : "`middleware` field must be a callback");
-  }
-  let finalMiddleware;
-  if (typeof middleware === "function") {
-    finalMiddleware = middleware(getDefaultMiddleware);
-    if (process.env.NODE_ENV !== "production" && !Array.isArray(finalMiddleware)) {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(3) : "when using a middleware builder function, an array of middleware must be returned");
-    }
-  } else {
-    finalMiddleware = getDefaultMiddleware();
-  }
-  if (process.env.NODE_ENV !== "production" && finalMiddleware.some((item) => typeof item !== "function")) {
-    throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(4) : "each middleware provided to configureStore must be a function");
-  }
-  if (process.env.NODE_ENV !== "production" && duplicateMiddlewareCheck) {
-    let middlewareReferences = /* @__PURE__ */ new Set();
-    finalMiddleware.forEach((middleware2) => {
-      if (middlewareReferences.has(middleware2)) {
-        throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(42) : "Duplicate middleware references found when creating the store. Ensure that each middleware is only included once.");
-      }
-      middlewareReferences.add(middleware2);
-    });
-  }
-  let finalCompose = compose;
-  if (devTools) {
-    finalCompose = composeWithDevTools({
-      // Enable capture of stack traces for dispatched Redux actions
-      trace: process.env.NODE_ENV !== "production",
-      ...typeof devTools === "object" && devTools
-    });
-  }
-  const middlewareEnhancer = applyMiddleware(...finalMiddleware);
-  const getDefaultEnhancers = buildGetDefaultEnhancers(middlewareEnhancer);
-  if (process.env.NODE_ENV !== "production" && enhancers && typeof enhancers !== "function") {
-    throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(5) : "`enhancers` field must be a callback");
-  }
-  let storeEnhancers = typeof enhancers === "function" ? enhancers(getDefaultEnhancers) : getDefaultEnhancers();
-  if (process.env.NODE_ENV !== "production" && !Array.isArray(storeEnhancers)) {
-    throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(6) : "`enhancers` callback must return an array");
-  }
-  if (process.env.NODE_ENV !== "production" && storeEnhancers.some((item) => typeof item !== "function")) {
-    throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(7) : "each enhancer provided to configureStore must be a function");
-  }
-  if (process.env.NODE_ENV !== "production" && finalMiddleware.length && !storeEnhancers.includes(middlewareEnhancer)) {
-    console.error("middlewares were provided, but middleware enhancer was not included in final enhancers - make sure to call `getDefaultEnhancers`");
-  }
-  const composedEnhancer = finalCompose(...storeEnhancers);
-  return createStore(rootReducer, preloadedState, composedEnhancer);
-}
-
-// src/mapBuilders.ts
-function executeReducerBuilderCallback(builderCallback) {
-  const actionsMap = {};
-  const actionMatchers = [];
-  let defaultCaseReducer;
-  const builder = {
-    addCase(typeOrActionCreator, reducer) {
-      if (process.env.NODE_ENV !== "production") {
-        if (actionMatchers.length > 0) {
-          throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(26) : "`builder.addCase` should only be called before calling `builder.addMatcher`");
-        }
-        if (defaultCaseReducer) {
-          throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(27) : "`builder.addCase` should only be called before calling `builder.addDefaultCase`");
-        }
-      }
-      const type = typeof typeOrActionCreator === "string" ? typeOrActionCreator : typeOrActionCreator.type;
-      if (!type) {
-        throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(28) : "`builder.addCase` cannot be called with an empty action type");
-      }
-      if (type in actionsMap) {
-        throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(29) : `\`builder.addCase\` cannot be called with two reducers for the same action type '${type}'`);
-      }
-      actionsMap[type] = reducer;
-      return builder;
-    },
-    addAsyncThunk(asyncThunk, reducers) {
-      if (process.env.NODE_ENV !== "production") {
-        if (defaultCaseReducer) {
-          throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(43) : "`builder.addAsyncThunk` should only be called before calling `builder.addDefaultCase`");
-        }
-      }
-      if (reducers.pending) actionsMap[asyncThunk.pending.type] = reducers.pending;
-      if (reducers.rejected) actionsMap[asyncThunk.rejected.type] = reducers.rejected;
-      if (reducers.fulfilled) actionsMap[asyncThunk.fulfilled.type] = reducers.fulfilled;
-      if (reducers.settled) actionMatchers.push({
-        matcher: asyncThunk.settled,
-        reducer: reducers.settled
-      });
-      return builder;
-    },
-    addMatcher(matcher, reducer) {
-      if (process.env.NODE_ENV !== "production") {
-        if (defaultCaseReducer) {
-          throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(30) : "`builder.addMatcher` should only be called before calling `builder.addDefaultCase`");
-        }
-      }
-      actionMatchers.push({
-        matcher,
-        reducer
-      });
-      return builder;
-    },
-    addDefaultCase(reducer) {
-      if (process.env.NODE_ENV !== "production") {
-        if (defaultCaseReducer) {
-          throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(31) : "`builder.addDefaultCase` can only be called once");
-        }
-      }
-      defaultCaseReducer = reducer;
-      return builder;
-    }
-  };
-  builderCallback(builder);
-  return [actionsMap, actionMatchers, defaultCaseReducer];
-}
-
-// src/createReducer.ts
-function isStateFunction(x) {
-  return typeof x === "function";
-}
-function createReducer(initialState, mapOrBuilderCallback) {
-  if (process.env.NODE_ENV !== "production") {
-    if (typeof mapOrBuilderCallback === "object") {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(8) : "The object notation for `createReducer` has been removed. Please use the 'builder callback' notation instead: https://redux-toolkit.js.org/api/createReducer");
-    }
-  }
-  let [actionsMap, finalActionMatchers, finalDefaultCaseReducer] = executeReducerBuilderCallback(mapOrBuilderCallback);
-  let getInitialState;
-  if (isStateFunction(initialState)) {
-    getInitialState = () => freezeDraftable(initialState());
-  } else {
-    const frozenInitialState = freezeDraftable(initialState);
-    getInitialState = () => frozenInitialState;
-  }
-  function reducer(state = getInitialState(), action) {
-    let caseReducers = [actionsMap[action.type], ...finalActionMatchers.filter(({
-      matcher
-    }) => matcher(action)).map(({
-      reducer: reducer2
-    }) => reducer2)];
-    if (caseReducers.filter((cr) => !!cr).length === 0) {
-      caseReducers = [finalDefaultCaseReducer];
-    }
-    return caseReducers.reduce((previousState, caseReducer) => {
-      if (caseReducer) {
-        if (isDraft(previousState)) {
-          const draft = previousState;
-          const result = caseReducer(draft, action);
-          if (result === void 0) {
-            return previousState;
-          }
-          return result;
-        } else if (!isDraftable(previousState)) {
-          const result = caseReducer(previousState, action);
-          if (result === void 0) {
-            if (previousState === null) {
-              return previousState;
-            }
-            throw Error("A case reducer on a non-draftable value must not return undefined");
-          }
-          return result;
-        } else {
-          return produce(previousState, (draft) => {
-            return caseReducer(draft, action);
-          });
-        }
-      }
-      return previousState;
-    }, state);
-  }
-  reducer.getInitialState = getInitialState;
-  return reducer;
-}
-
-// src/createSlice.ts
-var asyncThunkSymbol = /* @__PURE__ */ Symbol.for("rtk-slice-createasyncthunk");
-function getType(slice, actionKey) {
-  return `${slice}/${actionKey}`;
-}
-function buildCreateSlice({
-  creators
-} = {}) {
-  const cAT = creators?.asyncThunk?.[asyncThunkSymbol];
-  return function createSlice2(options) {
-    const {
-      name,
-      reducerPath = name
-    } = options;
-    if (!name) {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(11) : "`name` is a required option for createSlice");
-    }
-    if (typeof process !== "undefined" && process.env.NODE_ENV === "development") {
-      if (options.initialState === void 0) {
-        console.error("You must provide an `initialState` value that is not `undefined`. You may have misspelled `initialState`");
-      }
-    }
-    const reducers = (typeof options.reducers === "function" ? options.reducers(buildReducerCreators()) : options.reducers) || {};
-    const reducerNames = Object.keys(reducers);
-    const context = {
-      sliceCaseReducersByName: {},
-      sliceCaseReducersByType: {},
-      actionCreators: {},
-      sliceMatchers: []
-    };
-    const contextMethods = {
-      addCase(typeOrActionCreator, reducer2) {
-        const type = typeof typeOrActionCreator === "string" ? typeOrActionCreator : typeOrActionCreator.type;
-        if (!type) {
-          throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(12) : "`context.addCase` cannot be called with an empty action type");
-        }
-        if (type in context.sliceCaseReducersByType) {
-          throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(13) : "`context.addCase` cannot be called with two reducers for the same action type: " + type);
-        }
-        context.sliceCaseReducersByType[type] = reducer2;
-        return contextMethods;
-      },
-      addMatcher(matcher, reducer2) {
-        context.sliceMatchers.push({
-          matcher,
-          reducer: reducer2
-        });
-        return contextMethods;
-      },
-      exposeAction(name2, actionCreator) {
-        context.actionCreators[name2] = actionCreator;
-        return contextMethods;
-      },
-      exposeCaseReducer(name2, reducer2) {
-        context.sliceCaseReducersByName[name2] = reducer2;
-        return contextMethods;
-      }
-    };
-    reducerNames.forEach((reducerName) => {
-      const reducerDefinition = reducers[reducerName];
-      const reducerDetails = {
-        reducerName,
-        type: getType(name, reducerName),
-        createNotation: typeof options.reducers === "function"
-      };
-      if (isAsyncThunkSliceReducerDefinition(reducerDefinition)) {
-        handleThunkCaseReducerDefinition(reducerDetails, reducerDefinition, contextMethods, cAT);
-      } else {
-        handleNormalReducerDefinition(reducerDetails, reducerDefinition, contextMethods);
-      }
-    });
-    function buildReducer() {
-      if (process.env.NODE_ENV !== "production") {
-        if (typeof options.extraReducers === "object") {
-          throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(14) : "The object notation for `createSlice.extraReducers` has been removed. Please use the 'builder callback' notation instead: https://redux-toolkit.js.org/api/createSlice");
-        }
-      }
-      const [extraReducers = {}, actionMatchers = [], defaultCaseReducer = void 0] = typeof options.extraReducers === "function" ? executeReducerBuilderCallback(options.extraReducers) : [options.extraReducers];
-      const finalCaseReducers = {
-        ...extraReducers,
-        ...context.sliceCaseReducersByType
-      };
-      return createReducer(options.initialState, (builder) => {
-        for (let key in finalCaseReducers) {
-          builder.addCase(key, finalCaseReducers[key]);
-        }
-        for (let sM of context.sliceMatchers) {
-          builder.addMatcher(sM.matcher, sM.reducer);
-        }
-        for (let m of actionMatchers) {
-          builder.addMatcher(m.matcher, m.reducer);
-        }
-        if (defaultCaseReducer) {
-          builder.addDefaultCase(defaultCaseReducer);
-        }
-      });
-    }
-    const selectSelf = (state) => state;
-    const injectedSelectorCache = /* @__PURE__ */ new Map();
-    const injectedStateCache = /* @__PURE__ */ new WeakMap();
-    let _reducer;
-    function reducer(state, action) {
-      if (!_reducer) _reducer = buildReducer();
-      return _reducer(state, action);
-    }
-    function getInitialState() {
-      if (!_reducer) _reducer = buildReducer();
-      return _reducer.getInitialState();
-    }
-    function makeSelectorProps(reducerPath2, injected = false) {
-      function selectSlice(state) {
-        let sliceState = state[reducerPath2];
-        if (typeof sliceState === "undefined") {
-          if (injected) {
-            sliceState = getOrInsertComputed(injectedStateCache, selectSlice, getInitialState);
-          } else if (process.env.NODE_ENV !== "production") {
-            throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(15) : "selectSlice returned undefined for an uninjected slice reducer");
-          }
-        }
-        return sliceState;
-      }
-      function getSelectors(selectState = selectSelf) {
-        const selectorCache = getOrInsertComputed(injectedSelectorCache, injected, () => /* @__PURE__ */ new WeakMap());
-        return getOrInsertComputed(selectorCache, selectState, () => {
-          const map = {};
-          for (const [name2, selector] of Object.entries(options.selectors ?? {})) {
-            map[name2] = wrapSelector(selector, selectState, () => getOrInsertComputed(injectedStateCache, selectState, getInitialState), injected);
-          }
-          return map;
-        });
-      }
-      return {
-        reducerPath: reducerPath2,
-        getSelectors,
-        get selectors() {
-          return getSelectors(selectSlice);
-        },
-        selectSlice
-      };
-    }
-    const slice = {
-      name,
-      reducer,
-      actions: context.actionCreators,
-      caseReducers: context.sliceCaseReducersByName,
-      getInitialState,
-      ...makeSelectorProps(reducerPath),
-      injectInto(injectable, {
-        reducerPath: pathOpt,
-        ...config
-      } = {}) {
-        const newReducerPath = pathOpt ?? reducerPath;
-        injectable.inject({
-          reducerPath: newReducerPath,
-          reducer
-        }, config);
-        return {
-          ...slice,
-          ...makeSelectorProps(newReducerPath, true)
-        };
-      }
-    };
-    return slice;
-  };
-}
-function wrapSelector(selector, selectState, getInitialState, injected) {
-  function wrapper(rootState, ...args) {
-    let sliceState = selectState(rootState);
-    if (typeof sliceState === "undefined") {
-      if (injected) {
-        sliceState = getInitialState();
-      } else if (process.env.NODE_ENV !== "production") {
-        throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(16) : "selectState returned undefined for an uninjected slice reducer");
-      }
-    }
-    return selector(sliceState, ...args);
-  }
-  wrapper.unwrapped = selector;
-  return wrapper;
-}
-var createSlice = /* @__PURE__ */ buildCreateSlice();
-function buildReducerCreators() {
-  function asyncThunk(payloadCreator, config) {
-    return {
-      _reducerDefinitionType: "asyncThunk" /* asyncThunk */,
-      payloadCreator,
-      ...config
-    };
-  }
-  asyncThunk.withTypes = () => asyncThunk;
-  return {
-    reducer(caseReducer) {
-      return Object.assign({
-        // hack so the wrapping function has the same name as the original
-        // we need to create a wrapper so the `reducerDefinitionType` is not assigned to the original
-        [caseReducer.name](...args) {
-          return caseReducer(...args);
-        }
-      }[caseReducer.name], {
-        _reducerDefinitionType: "reducer" /* reducer */
-      });
-    },
-    preparedReducer(prepare, reducer) {
-      return {
-        _reducerDefinitionType: "reducerWithPrepare" /* reducerWithPrepare */,
-        prepare,
-        reducer
-      };
-    },
-    asyncThunk
-  };
-}
-function handleNormalReducerDefinition({
-  type,
-  reducerName,
-  createNotation
-}, maybeReducerWithPrepare, context) {
-  let caseReducer;
-  let prepareCallback;
-  if ("reducer" in maybeReducerWithPrepare) {
-    if (createNotation && !isCaseReducerWithPrepareDefinition(maybeReducerWithPrepare)) {
-      throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(17) : "Please use the `create.preparedReducer` notation for prepared action creators with the `create` notation.");
-    }
-    caseReducer = maybeReducerWithPrepare.reducer;
-    prepareCallback = maybeReducerWithPrepare.prepare;
-  } else {
-    caseReducer = maybeReducerWithPrepare;
-  }
-  context.addCase(type, caseReducer).exposeCaseReducer(reducerName, caseReducer).exposeAction(reducerName, prepareCallback ? createAction(type, prepareCallback) : createAction(type));
-}
-function isAsyncThunkSliceReducerDefinition(reducerDefinition) {
-  return reducerDefinition._reducerDefinitionType === "asyncThunk" /* asyncThunk */;
-}
-function isCaseReducerWithPrepareDefinition(reducerDefinition) {
-  return reducerDefinition._reducerDefinitionType === "reducerWithPrepare" /* reducerWithPrepare */;
-}
-function handleThunkCaseReducerDefinition({
-  type,
-  reducerName
-}, reducerDefinition, context, cAT) {
-  if (!cAT) {
-    throw new Error(process.env.NODE_ENV === "production" ? formatProdErrorMessage(18) : "Cannot use `create.asyncThunk` in the built-in `createSlice`. Use `buildCreateSlice({ creators: { asyncThunk: asyncThunkCreator } })` to create a customised version of `createSlice`.");
-  }
-  const {
-    payloadCreator,
-    fulfilled,
-    pending,
-    rejected,
-    settled,
-    options
-  } = reducerDefinition;
-  const thunk = cAT(type, payloadCreator, options);
-  context.exposeAction(reducerName, thunk);
-  if (fulfilled) {
-    context.addCase(thunk.fulfilled, fulfilled);
-  }
-  if (pending) {
-    context.addCase(thunk.pending, pending);
-  }
-  if (rejected) {
-    context.addCase(thunk.rejected, rejected);
-  }
-  if (settled) {
-    context.addMatcher(thunk.settled, settled);
-  }
-  context.exposeCaseReducer(reducerName, {
-    fulfilled: fulfilled || noop,
-    pending: pending || noop,
-    rejected: rejected || noop,
-    settled: settled || noop
-  });
-}
-function noop() {
-}
-
-// src/formatProdErrorMessage.ts
-function formatProdErrorMessage(code) {
-  return `Minified Redux Toolkit error #${code}; visit https://redux-toolkit.js.org/Errors?code=${code} for the full message or use the non-minified dev environment for full errors. `;
-}
-
-export { configureStore, createSlice };
+export { Je as ReducerType, me as SHOULD_AUTOBATCH, I as TaskAbortError, L as Tuple, actionTypes_default as __DO_NOT_USE__ActionTypes, we as addListener, applyMiddleware, It as asyncThunkCreator, Se as autoBatchEnhancer, bindActionCreators, Qe as buildCreateSlice, ft as clearAllListeners, combineReducers, dn as combineSlices, compose, Rt as configureStore, P as createAction, At as createActionCreatorInvariantMiddleware, ge as createAsyncThunk, ye as createDraftSafeSelector, Ie as createDraftSafeSelectorCreator, Yt as createDynamicMiddleware, Gt as createEntityAdapter, mt as createImmutableStateInvariantMiddleware, Xt as createListenerMiddleware, produce as createNextState, ke as createReducer, createSelector, createSelectorCreator, St as createSerializableStateInvariantMiddleware, Ot as createSlice, createStore, current, Fe as findNonSerializableValue, C as formatProdErrorMessage, freeze, isAction, he as isActionCreator, K as isAllOf, _ as isAnyOf, Ke as isAsyncThunkAction, isDraft, Ae as isFluxStandardAction, Be as isFulfilled, Tt as isImmutableDefault, ze as isPending, je as isPlain, isPlainObject$1 as isPlainObject, te as isRejected, Ge as isRejectedWithValue, legacy_createStore, lruMemoize, qe as miniSerializeError, D as nanoid, original, Ct as prepareAutoBatched, Pe as removeListener, $e as unwrapResult, weakMapMemoize };

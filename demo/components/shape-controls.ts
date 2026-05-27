@@ -11,7 +11,7 @@ export class ShapeControls extends HTMLElement {
 	#ec = new Events({
 		connected: true,
 		target: this.#wc.shadowRoot,
-		listeners: {click: this.#clickHandler.bind(this)},
+		listeners: { click: this.#clickHandler.bind(this) },
 	});
 
 	// #sc = new Subscription({
