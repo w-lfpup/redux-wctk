@@ -1,17 +1,11 @@
 import { Wc, Microtask } from "@w-lfpup/wctk";
-import { getState } from "../datastore.js";
+import { datastore } from "../datastore/mod.js";
 export class ShapeList extends HTMLElement {
     #wc = new Wc({ host: this });
     #mc = new Microtask(this.#render.bind(this));
-    // #sc = new Subscription({
-    // 	host: this,
-    // 	callback: this.#mc.queue,
-    // 	connected: true,
-    // 	subscribe,
-    // 	unsubscribe,
-    // });
+    #sub = datastore.subscribe(this.#mc.queue);
     #render() {
-        let state = getState();
+        let state = datastore.getState();
         let length = Math.min(state.shapeList.length, this.children.length);
         let children = Array.from(this.children);
         // remove nodes

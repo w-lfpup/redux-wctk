@@ -1,5 +1,5 @@
 import { Wc, Events, Microtask, QuerySelector } from "@w-lfpup/wctk";
-import { dispatch, getState, subscribe, unsubscribe } from "../../datastore/datastore.js";
+import { datastore } from "../datastore/mod.js";
 
 export class ShapeControls extends HTMLElement {
 	#wc = new Wc({ host: this });
@@ -14,16 +14,10 @@ export class ShapeControls extends HTMLElement {
 		listeners: { click: this.#clickHandler.bind(this) },
 	});
 
-	// #sc = new Subscription({
-	// 	host: this,
-	// 	callback: this.#mc.queue,
-	// 	connected: true,
-	// 	subscribe,
-	// 	unsubscribe,
-	// });
+	#sub = datastore.subscribe(this.#mc.queue);
 
 	#render() {
-		let state = getState();
+		let state = datastore.getState();
 
 		let { circles, squares } = state;
 
@@ -51,7 +45,7 @@ export class ShapeControls extends HTMLElement {
 		let { target } = e;
 		if (target instanceof HTMLElement) {
 			let type = target.getAttribute("action");
-			if (type) dispatch({ type });
+			if (type) datastore.dispatch({ type });
 		}
 	}
 }

@@ -1,25 +1,27 @@
-# Wctk-Redux-SSR
+# Redux-wctk
 
 A demonstration server-side-rendered webcomponents and state management.
 
-Checkout the [live demo](https://w-lfpup.github.io/wctk-redux-ssr/demo/)!
+Checkout the [live demo](https://w-lfpup.github.io/redux-wctk/www/)!
 
-## Details
+## Abstract
 
-For this example, web components are built using [wctk-js](https://github.com/w-lfpup/wctk-js) and state management is implemented with [redux](https://redux.js.org)
+For this example, state management is implemented with [redux](https://redux.js.org)
+and webcomponents are built using [wctk-js](https://github.com/w-lfpup/wctk-js/).
 
-This example demonstrates how to deliver an initial response with:
+This example delivers an initial response with:
 
-- SSR / SSG styles and structure
-- No FOUC (flash of unstyled content)
 - Web components via declarative shadow dom
+- SSR / SSG styles and structure
+- No flash of unstyled content
+- No layout shifts
 
-Then afterwards:
+Afterwards:
 
-- Progressively-enhance state-management with redux
-- Progressively-enhance web-component interactivity with wctk-js
-- Subscribe components to datastores like redux with wctk-js
+- Lazy-load webcomponent interactivity
+- Lazy-load state-management
+- Subscribe components to centralized state
 
 ## License
 
-Wctk-Redux-SSR is released under the BSD-3 Clause License.
+Redux-wctk is released under the BSD-3 Clause License.

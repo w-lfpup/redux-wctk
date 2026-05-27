@@ -1,17 +1,11 @@
 import { Wc, Microtask } from "@w-lfpup/wctk";
-import { getState } from "../datastore.js";
+import { datastore } from "../datastore/mod.js";
 export class ShapeTable extends HTMLElement {
     #wc = new Wc({ host: this });
     #mc = new Microtask(this.#render.bind(this));
-    // #sc = new Subscription({
-    // 	host: this,
-    // 	callback: this.#mc.queue,
-    // 	connected: true,
-    // 	subscribe,
-    // 	unsubscribe,
-    // });
+    #sub = datastore.subscribe(this.#mc.queue);
     #render() {
-        let state = getState();
+        let state = datastore.getState();
         for (let index = 0; index < this.children.length; index++) {
             let child = this.children[index];
             let slot = child.getAttribute("slot");
