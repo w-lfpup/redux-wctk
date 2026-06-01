@@ -1,30 +1,23 @@
-import { Wc, Events, Microtask, Subscription, QuerySelector } from "wctk";
-import { dispatch, getState, subscribe, unsubscribe } from "../datastore.js";
+import { Wc, Events, Microtask, QuerySelector } from "@w-lfpup/wctk";
+import { datastore } from "../datastore/mod.js";
 export class ShapeControls extends HTMLElement {
     #wc = new Wc({ host: this });
-    #qc = new QuerySelector({ parent: this.#wc.shadowRoot });
-    #mc = new Microtask({ host: this, callback: this.#render });
+    #qc = new QuerySelector(this.#wc.shadowRoot);
+    #mc = new Microtask(this.#render.bind(this));
     #ec = new Events({
-        host: this,
         connected: true,
         target: this.#wc.shadowRoot,
-        callbacks: [["click", this.#clickHandler]],
+        listeners: { click: this.#clickHandler.bind(this) },
     });
-    #sc = new Subscription({
-        host: this,
-        callback: this.#mc.queue,
-        connected: true,
-        subscribe,
-        unsubscribe,
-    });
+    #sub = datastore.subscribe(this.#mc.queue);
     #render() {
-        let state = getState();
+        let state = datastore.getState();
         let { circles, squares } = state;
-        let circleButton = this.#qc.querySelector("[action='shapes/decrement_circles']");
+        let circleButton = this.#qc.querySelector("[action='decrement_circles']");
         circles
             ? circleButton?.removeAttribute("disabled")
             : circleButton?.setAttribute("disabled", "");
-        let squaresButton = this.#qc.querySelector("[action='shapes/decrement_squares']");
+        let squaresButton = this.#qc.querySelector("[action='decrement_squares']");
         squares
             ? squaresButton?.removeAttribute("disabled")
             : squaresButton?.setAttribute("disabled", "");
@@ -37,8 +30,9 @@ export class ShapeControls extends HTMLElement {
         let { target } = e;
         if (target instanceof HTMLElement) {
             let type = target.getAttribute("action");
-            if (type)
-                dispatch({ type });
+            if (type) {
+                datastore.dispatch({ type });
+            }
         }
     }
 }
