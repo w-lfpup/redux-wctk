@@ -2,7 +2,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "npm run build:src && npm run bundle",
-		"build:src": "npx tsx",
+		"build:src": "npx tsc",
 		"format": "npx prettier --write ./",
 		"bundle": "npx rollup --config rollup.config.js"
 	},

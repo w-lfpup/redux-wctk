@@ -1,15 +1,14 @@
 # Redux-wctk
 
-A demonstration server-side-rendered webcomponents and state management.
-
-Checkout the [live demo](https://w-lfpup.github.io/redux-wctk/www/)!
+A working [demo](https://w-lfpup.github.io/redux-wctk/www/) of a server-side-rendered
+webapp using declarative shadow dom and centralized-state.
 
 ## Abstract
 
-For this example, state management is implemented with [redux](https://redux.js.org)
+State management is implemented with [redux](https://redux.js.org)
 and webcomponents are built using [wctk-js](https://github.com/w-lfpup/wctk-js/).
 
-This example delivers an initial response with:
+An initial response is delivered with:
 
 - Web components via declarative shadow dom
 - SSR / SSG styles and structure
