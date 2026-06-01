@@ -1,7 +1,7 @@
 # Redux-wctk
 
-A working [demo](https://w-lfpup.github.io/redux-wctk/www/) of a server-side-rendered
-webapp using declarative shadow dom and centralized-state.
+An SSR webapp [demo](https://w-lfpup.github.io/redux-wctk/www/) using declarative shadow dom
+and centralized-state.
 
 ## Abstract
 
@@ -17,9 +17,9 @@ An initial response is delivered with:
 
 Afterwards:
 
-- Lazy-load webcomponent interactivity
-- Lazy-load state-management
-- Subscribe components to centralized state
+- Webcomponent interactivity is lazy-loaded
+- State-management is lazy-loaded
+- Components subscribe to state updates
 
 ## License
 
