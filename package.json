@@ -1,6 +1,7 @@
 {
 	"type": "module",
 	"scripts": {
+		"prepare": "npm run build",
 		"build": "npm run build:src && npm run bundle",
 		"build:src": "npx tsc",
 		"format": "npx prettier --write ./",
