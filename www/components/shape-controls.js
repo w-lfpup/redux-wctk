@@ -1,5 +1,5 @@
 import { Wc, Events, Microtask, QuerySelector } from "@w-lfpup/wctk";
-import { datastore } from "../datastore/mod.js";
+import { datastore, actions } from "../datastore/mod.js";
 export class ShapeControls extends HTMLElement {
     #wc = new Wc({ host: this });
     #qc = new QuerySelector(this.#wc.shadowRoot);
@@ -30,10 +30,12 @@ export class ShapeControls extends HTMLElement {
         let { target } = e;
         if (target instanceof HTMLElement) {
             let type = target.getAttribute("action");
-            if (type) {
-                console.log(target, type);
-                datastore.dispatch({ type });
-            }
+            if ("increment_squares" === type)
+                actions.increment_squares();
+            // if (type) {
+            // 	console.log("about to dispatch:", target, type);
+            // 	datastore.dispatch({ type });
+            // }
         }
     }
 }

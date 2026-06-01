@@ -30,19 +30,20 @@ class Events {
 class Microtask {
     #queued = false;
     #callback;
-    queue = this.#queue.bind(this);
     constructor(callback) {
         this.#callback = callback;
     }
+    queue = this.#queue.bind(this);
     #queue() {
         if (this.#queued)
             return;
         this.#queued = true;
-        // could this be a bound function? less function creation
-        queueMicrotask(() => {
-            this.#queued = false;
-            this.#callback();
-        });
+        window.queueMicrotask(this.#microtask);
+    }
+    #microtask = this.#unboundMicrotask.bind(this);
+    #unboundMicrotask() {
+        this.#queued = false;
+        this.#callback();
     }
 }
 

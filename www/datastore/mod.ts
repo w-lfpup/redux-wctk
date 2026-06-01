@@ -68,3 +68,9 @@ const shapeSlice = createSlice({
 export const datastore = configureStore({
 	reducer: shapeSlice.reducer,
 });
+
+datastore.dispatch({ type: "increment_squares" });
+
+console.log("get that state", datastore.getState());
+
+export const actions = shapeSlice.actions;

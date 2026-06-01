@@ -51,33 +51,6 @@ const shapeSlice = createSlice({
 export const datastore = configureStore({
     reducer: shapeSlice.reducer,
 });
-// An event can dispatch state and is accessible via the document
-// instead of a module. This is a good thing.
-// declare global {
-// 	interface GlobalEventHandlersEventMap {
-// 		["#state"]: ReduxEvent<ShapeState>;
-// 	}
-// }
-// let state = datastore.getState();
-// // let prevState = datastore.getState();
-// export class ReduxEvent<S = unknown> extends Event {
-// 	// prevState: S;
-// 	state: S;
-// 	constructor(name: string, state: S, eventInitDict?: EventInit) {
-// 		super(name, eventInitDict);
-// 		this.state = state;
-// 	}
-// 	// constructor(name: string, prevState: S, state: S, eventInitDict?: EventInit) {
-// 	// 	super(name, eventInitDict);
-// 	// 	this.prevState = prevState;
-// 	// 	this.state = state;
-// 	// }
-// }
-// function dispatchState() {
-// 	// prevState = state;
-// 	state = datastore.getState();
-// 	// document.dispatchEvent(new ReduxEvent<ShapeState>("#state", prevState, state));
-// 	document.dispatchEvent(new ReduxEvent<ShapeState>("#redux", state));
-// }
-// datastore.subscribe(dispatchState);
-// export { datastore }
+datastore.dispatch({ type: "increment_squares" });
+console.log("get that state", datastore.getState());
+export const actions = shapeSlice.actions;
