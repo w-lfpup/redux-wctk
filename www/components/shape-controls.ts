@@ -41,11 +41,9 @@ export class ShapeControls extends HTMLElement {
 		let { target } = e;
 		if (target instanceof HTMLElement) {
 			let type = target.getAttribute("action");
-			if ("increment_squares" === type) actions.increment_squares();
-			// if (type) {
-			// 	console.log("about to dispatch:", target, type);
-			// 	datastore.dispatch({ type });
-			// }
+			if (type) {
+				datastore.dispatch({ type });
+			}
 		}
 	}
 }

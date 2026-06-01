@@ -33,32 +33,23 @@ const shapeSlice = createSlice({
 	initialState: initialState as ShapeState,
 	reducers: {
 		reset: (state) => {
-			console.log("resetting!");
-
 			state.circles = 0;
 			state.squares = 0;
 			state.shapeList = [];
 		},
 		increment_squares: (state) => {
-			console.log("incrementing!");
 			state.squares += 1;
 			state.shapeList.push("square");
 		},
 		decrement_squares: (state) => {
-			console.log("decrementing squares!");
-
 			state.squares = Math.max(0, state.squares - 1);
 			removeShape(state.shapeList, "square");
 		},
 		increment_circles: (state) => {
-			console.log("incrementing circles!");
-
 			state.circles += 1;
 			state.shapeList.push("circle");
 		},
 		decrement_circles: (state) => {
-			console.log("decrementing circles!");
-
 			state.circles = Math.max(0, state.circles - 1);
 			removeShape(state.shapeList, "circle");
 		},
@@ -68,9 +59,5 @@ const shapeSlice = createSlice({
 export const datastore = configureStore({
 	reducer: shapeSlice.reducer,
 });
-
-datastore.dispatch({ type: "increment_squares" });
-
-console.log("get that state", datastore.getState());
 
 export const actions = shapeSlice.actions;
