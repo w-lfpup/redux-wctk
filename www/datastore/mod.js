@@ -46,4 +46,3 @@ const shapeSlice = createSlice({
 export const datastore = configureStore({
     reducer: shapeSlice.reducer,
 });
-export const actions = shapeSlice.actions;

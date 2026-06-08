@@ -1,13 +1,10 @@
 import { Wc, Events, Microtask, QuerySelector } from "@w-lfpup/wctk";
-import { datastore, actions } from "../datastore/mod.js";
+import { datastore } from "../datastore/mod.js";
 
 export class ShapeControls extends HTMLElement {
 	#wc = new Wc({ host: this });
-
 	#qc = new QuerySelector(this.#wc.shadowRoot);
-
 	#mc = new Microtask(this.#render.bind(this));
-
 	#ec = new Events({
 		connected: true,
 		target: this.#wc.shadowRoot,
@@ -21,17 +18,24 @@ export class ShapeControls extends HTMLElement {
 
 		let { circles, squares } = state;
 
-		let circleButton = this.#qc.querySelector("[action='decrement_circles']");
+		let circleButton = this.#qc.querySelector(
+			"[action='shapes/decrement_circles']",
+		);
+
+		let squaresButton = this.#qc.querySelector(
+			"[action='shapes/decrement_squares']",
+		);
+
+		let resetButton = this.#qc.querySelector("[type=reset]");
+
 		circles
 			? circleButton?.removeAttribute("disabled")
 			: circleButton?.setAttribute("disabled", "");
 
-		let squaresButton = this.#qc.querySelector("[action='decrement_squares']");
 		squares
 			? squaresButton?.removeAttribute("disabled")
 			: squaresButton?.setAttribute("disabled", "");
 
-		let resetButton = this.#qc.querySelector("[type=reset]");
 		circles + squares
 			? resetButton?.removeAttribute("disabled")
 			: resetButton?.setAttribute("disabled", "");
@@ -39,11 +43,9 @@ export class ShapeControls extends HTMLElement {
 
 	#clickHandler(e: PointerEvent) {
 		let { target } = e;
-		if (target instanceof HTMLElement) {
-			let type = target.getAttribute("action");
-			if (type) {
-				datastore.dispatch({ type });
-			}
-		}
+		if (!(target instanceof HTMLElement)) return;
+
+		let type = target.getAttribute("action");
+		if (type) datastore.dispatch({ type });
 	}
 }

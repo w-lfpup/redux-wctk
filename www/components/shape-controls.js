@@ -13,26 +13,25 @@ export class ShapeControls extends HTMLElement {
     #render() {
         let state = datastore.getState();
         let { circles, squares } = state;
-        let circleButton = this.#qc.querySelector("[action='decrement_circles']");
+        let circleButton = this.#qc.querySelector("[action='shapes/decrement_circles']");
+        let squaresButton = this.#qc.querySelector("[action='shapes/decrement_squares']");
+        let resetButton = this.#qc.querySelector("[type=reset]");
         circles
             ? circleButton?.removeAttribute("disabled")
             : circleButton?.setAttribute("disabled", "");
-        let squaresButton = this.#qc.querySelector("[action='decrement_squares']");
         squares
             ? squaresButton?.removeAttribute("disabled")
             : squaresButton?.setAttribute("disabled", "");
-        let resetButton = this.#qc.querySelector("[type=reset]");
         circles + squares
             ? resetButton?.removeAttribute("disabled")
             : resetButton?.setAttribute("disabled", "");
     }
     #clickHandler(e) {
         let { target } = e;
-        if (target instanceof HTMLElement) {
-            let type = target.getAttribute("action");
-            if (type) {
-                datastore.dispatch({ type });
-            }
-        }
+        if (!(target instanceof HTMLElement))
+            return;
+        let type = target.getAttribute("action");
+        if (type)
+            datastore.dispatch({ type });
     }
 }
