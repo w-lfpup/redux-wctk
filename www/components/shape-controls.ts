@@ -43,11 +43,9 @@ export class ShapeControls extends HTMLElement {
 
 	#clickHandler(e: PointerEvent) {
 		let { target } = e;
-		if (target instanceof HTMLElement) {
-			let type = target.getAttribute("action");
-			if (type) {
-				datastore.dispatch({ type });
-			}
-		}
+		if (!(target instanceof HTMLElement)) return;
+
+		let type = target.getAttribute("action");
+		if (type) datastore.dispatch({ type });
 	}
 }
