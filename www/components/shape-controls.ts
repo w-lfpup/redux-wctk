@@ -21,18 +21,21 @@ export class ShapeControls extends HTMLElement {
 		let circleButton = this.#qc.querySelector(
 			"[action='shapes/decrement_circles']",
 		);
-		circles
-			? circleButton?.removeAttribute("disabled")
-			: circleButton?.setAttribute("disabled", "");
 
 		let squaresButton = this.#qc.querySelector(
 			"[action='shapes/decrement_squares']",
 		);
+
+		let resetButton = this.#qc.querySelector("[type=reset]");
+
+		circles
+			? circleButton?.removeAttribute("disabled")
+			: circleButton?.setAttribute("disabled", "");
+
 		squares
 			? squaresButton?.removeAttribute("disabled")
 			: squaresButton?.setAttribute("disabled", "");
 
-		let resetButton = this.#qc.querySelector("[type=reset]");
 		circles + squares
 			? resetButton?.removeAttribute("disabled")
 			: resetButton?.setAttribute("disabled", "");
