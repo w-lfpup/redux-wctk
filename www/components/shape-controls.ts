@@ -1,6 +1,7 @@
 import { Wc, Events, Microtask, QuerySelector } from "@w-lfpup/wctk";
-import { datastore, actions } from "../datastore/mod.js";
+import { datastore } from "../datastore/mod.js";
 
+type blah = GlobalEventHandlersEventMap;
 export class ShapeControls extends HTMLElement {
 	#wc = new Wc({ host: this });
 
@@ -9,7 +10,7 @@ export class ShapeControls extends HTMLElement {
 	#mc = new Microtask(this.#render.bind(this));
 
 	#sub = datastore.subscribe(this.#mc.queue);
-	
+
 	#ec = new Events({
 		connected: true,
 		target: this.#wc.shadowRoot,
@@ -21,12 +22,16 @@ export class ShapeControls extends HTMLElement {
 
 		let { circles, squares } = state;
 
-		let circleButton = this.#qc.querySelector("[action='decrement_circles']");
+		let circleButton = this.#qc.querySelector(
+			"[action='shapes/decrement_circles']",
+		);
 		circles
 			? circleButton?.removeAttribute("disabled")
 			: circleButton?.setAttribute("disabled", "");
 
-		let squaresButton = this.#qc.querySelector("[action='decrement_squares']");
+		let squaresButton = this.#qc.querySelector(
+			"[action='shapes/decrement_squares']",
+		);
 		squares
 			? squaresButton?.removeAttribute("disabled")
 			: squaresButton?.setAttribute("disabled", "");
