@@ -8,13 +8,13 @@ export class ShapeControls extends HTMLElement {
 
 	#mc = new Microtask(this.#render.bind(this));
 
+	#sub = datastore.subscribe(this.#mc.queue);
+	
 	#ec = new Events({
 		connected: true,
 		target: this.#wc.shadowRoot,
 		listeners: { click: this.#clickHandler.bind(this) },
 	});
-
-	#sub = datastore.subscribe(this.#mc.queue);
 
 	#render() {
 		let state = datastore.getState();
