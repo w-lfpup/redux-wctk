@@ -13,7 +13,6 @@ export class ShapeControls extends HTMLElement {
     #render() {
         let state = datastore.getState();
         let { circles, squares } = state;
-        console.log("state", state);
         let circleButton = this.#qc.querySelector("[action='shapes/decrement_circles']");
         circles
             ? circleButton?.removeAttribute("disabled")

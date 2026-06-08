@@ -3,7 +3,6 @@ import { datastore } from "../datastore/mod.js";
 
 export class ShapeList extends HTMLElement {
 	#wc = new Wc({ host: this });
-
 	#mc = new Microtask(this.#render.bind(this));
 
 	#sub = datastore.subscribe(this.#mc.queue);
